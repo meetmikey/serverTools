@@ -5,6 +5,7 @@ mkdir -p $MIKEY_SOURCE
 BRANCH="master"
 
 REPOSITORIES=( serverCommon mikeymail mailReader mikeyAPI )
+PROGRAMS=( mikeymail mailReader mikeyAPI )
 
 #Clone only needs to run the first time.
 #git clone git@github.com:meetmikey/serverCommon.git $MIKEY_SOURCE/serverCommon
@@ -25,4 +26,10 @@ for i in "${REPOSITORIES[@]}"
 do
   cd $MIKEY_BUILD/$i
   npm install
+done
+
+for i in "${PROGRAMS[@]}"
+do
+  cd $MIKEY_BUILD/$i
+  node app.js
 done
