@@ -18,7 +18,8 @@ do
   git pull origin $BRANCH  
 done
 
-cp -r $MIKEY_SOURCE/* $MIKEY_BUILD/
+rm -rf $MIKEY_BUILD/*
+rsync -r --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
 
 for i in "${REPOSITORIES[@]}"
 do
