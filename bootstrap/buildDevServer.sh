@@ -16,14 +16,9 @@ PROGRAMS=( mikeymail mailReader mikeyAPI )
 for i in "${REPOSITORIES[@]}"
 do
   cd $MIKEY_SOURCE/$i
-  git pull origin $BRANCH  
-done
-
-rm -rf $MIKEY_BUILD/*
-rsync -r --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
-
-for i in "${REPOSITORIES[@]}"
-do
+  git pull origin $BRANCH
+  rm -rf $MIKEY_BUILD/$i
+  rsync -r --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
   cd $MIKEY_BUILD/$i
   npm install
 done
@@ -31,5 +26,6 @@ done
 for i in "${PROGRAMS[@]}"
 do
   cd $MIKEY_BUILD/$i
-  node app.js
+  stop.sh
+  start.sh
 done
