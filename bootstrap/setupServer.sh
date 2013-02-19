@@ -31,11 +31,26 @@ wget http://downloads.mongodb.org/src/mongodb-src-r2.2.3.tar.gz
 tar xvzf mongodb-src-r2.2.3.tar.gz
 cd mongodb-src-r2.2.3
 scons all
+scons --prefix=/opt/mongo install
 cd ../
 rm -f mongodb-src-r2.2.3.tar.gz
+
+
+wget http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.20.5.tar.gz
+tar xvzf elasticsearch-0.20.5.tar.gz
+cd elasticsearch-0.20.5
+#what now?
+
+
+wget http://wrapper.tanukisoftware.com/download/3.5.17/wrapper-linux-x86-32-3.5.17-pro.tar.gz
 
 
 MIKEY_BUILD="/usr/local/mikey"
 
 mkdir -p $MIKEY_BUILD
 chown -R mikey:mikey $MIKEY_BUILD
+
+MIKEY_LOG="/var/log/mikey"
+mkdir -p $MIKEY_LOG
+chown -R mikey:mikey $MIKEY_LOG
+chmod a+rw -R $MIKEY_LOG
