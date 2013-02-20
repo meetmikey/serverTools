@@ -19,7 +19,7 @@ do
   git pull origin $BRANCH
   npm install
   rm -rf $MIKEY_BUILD/$i
-  rsync -r --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
+  rsync -rq --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
   cd $MIKEY_BUILD/$i
 done
 
