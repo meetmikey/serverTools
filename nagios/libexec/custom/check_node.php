@@ -1,7 +1,12 @@
 #!/usr/bin/php
 <?php
 
-$cmd = "ps aux | grep node | grep app.js  | grep -v forever | awk '{print $2}'";
+$app = 'app.js'
+if ( $argc >= 2 ) {
+  $app = $argv[1] . ".js"
+}
+
+$cmd = "ps aux | grep node | grep " . $app . "  | grep -v forever | awk '{print $2}'";
 $nodePID = exec($cmd);
 
 if ( ! $nodePID ) {

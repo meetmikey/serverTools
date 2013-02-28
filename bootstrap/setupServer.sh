@@ -19,6 +19,8 @@ rm -f node-v0.8.20.tar.gz
 
 #forever
 npm install forever -g
+npm install jasmine-node -g
+
 
 #scons (needed to build mongodb)
 wget http://sourceforge.net/projects/scons/files/scons/2.2.0/scons-2.2.0.tar.gz/download
