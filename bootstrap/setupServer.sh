@@ -61,3 +61,9 @@ MIKEY_LOG="/var/log/mikey"
 mkdir -p $MIKEY_LOG
 chown -R mikey:mikey $MIKEY_LOG
 chmod a+rw -R $MIKEY_LOG
+
+#swap instructions here:
+#http://www.cyberciti.biz/faq/linux-add-a-swap-file-howto/
+
+#nagios instructions here:
+#http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
