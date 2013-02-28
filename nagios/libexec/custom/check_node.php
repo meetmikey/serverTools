@@ -1,9 +1,9 @@
 #!/usr/bin/php
 <?php
 
-$app = 'app.js'
+$app = 'app.js';
 if ( $argc >= 2 ) {
-  $app = $argv[1] . ".js"
+  $app = $argv[1] . ".js";
 }
 
 $cmd = "ps aux | grep node | grep " . $app . "  | grep -v forever | awk '{print $2}'";
