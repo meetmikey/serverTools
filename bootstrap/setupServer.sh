@@ -52,6 +52,15 @@ cp -r elasticsearch-servicewrapper/service /usr/local/elasticsearch/bin/
 
 #note: when starting ES for the first time, we need to run serverCommon/esScripts/createIndex.sh
 
+useradd mikey
+passwd mikey #(and give him a password)
+
+#put these things in /home/mikey/.bashrc
+#export NODE_ENV="development"
+#export MIKEY_SOURCE="/home/mikey/source"
+#export MIKEY_BUILD="/usr/local/mikey"
+#export SERVER_COMMON="$MIKEY_BUILD/serverCommon"
+
 MIKEY_BUILD="/usr/local/mikey"
 
 mkdir -p $MIKEY_BUILD
