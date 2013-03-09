@@ -54,6 +54,7 @@ cp -r elasticsearch-servicewrapper/service /usr/local/elasticsearch/bin/
 
 #note: when starting ES for the first time, we need to run serverCommon/esScripts/createIndex.sh
 
+sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.7.0
 #swap instructions here:
 #http://www.cyberciti.biz/faq/linux-add-a-swap-file-howto/
 
@@ -85,6 +86,8 @@ chmod a+rw -R $MIKEY_LOG
 
 su mikey
 
+#nagios instructions here:
+#http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
 #put these things in /home/mikey/.bashrc
 #export NODE_ENV="development"
 #export MIKEY_SOURCE="/home/mikey/source"
