@@ -61,7 +61,9 @@ cp -r elasticsearch-servicewrapper/service /usr/local/elasticsearch/bin/
 #http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
 
 
-
+iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8080
+iptables -t nat -I OUTPUT -p tcp -d 127.0.0.1 --dport 443 -j REDIRECT --to-ports 8080
+/etc/init.d/iptables save
 
 
 # SET UP MIKEY!
@@ -88,6 +90,13 @@ su mikey
 #export MIKEY_SOURCE="/home/mikey/source"
 #export MIKEY_BUILD="/usr/local/mikey"
 #export SERVER_COMMON="$MIKEY_BUILD/serverCommon"
+
+cd /home/mikey
+mkdir .ssh
+cd .ssh
+ssh-keygen -t rsa -C "mikey@mikeyteam.com"
+#copy id_rsa.pub into github under the 'meetmikeygit' account
+#https://github.com/settings/ssh
 
 cd /home/mikey
 mkdir source
