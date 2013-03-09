@@ -1,5 +1,7 @@
 #!/bin/sh
 
+sudo -s
+
 yum update -y
 
 yum install -y gcc-c++ make openssl-devel git
@@ -10,7 +12,7 @@ cd /usr/local/source
 #node
 wget http://nodejs.org/dist/v0.8.20/node-v0.8.20.tar.gz
 tar xvzf node-v0.8.20.tar.gz
-cd node-v0.8.20-linux-x64
+cd node-v0.8.20
 ./configure
 make
 make install
@@ -18,8 +20,8 @@ cd ../
 rm -f node-v0.8.20.tar.gz
 
 #forever
-npm install forever -g
-npm install jasmine-node -g
+/usr/local/bin/npm install forever -g
+/usr/local/bin/npm install jasmine-node -g
 
 
 #scons (needed to build mongodb)
@@ -53,15 +55,22 @@ cp -r elasticsearch-servicewrapper/service /usr/local/elasticsearch/bin/
 #note: when starting ES for the first time, we need to run serverCommon/esScripts/createIndex.sh
 
 sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.7.0
+#swap instructions here:
+#http://www.cyberciti.biz/faq/linux-add-a-swap-file-howto/
+
+#nagios instructions here:
+#http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
+
+
+
+
+
+# SET UP MIKEY!
+#########################
 
 useradd mikey
 passwd mikey #(and give him a password)
 
-#put these things in /home/mikey/.bashrc
-#export NODE_ENV="development"
-#export MIKEY_SOURCE="/home/mikey/source"
-#export MIKEY_BUILD="/usr/local/mikey"
-#export SERVER_COMMON="$MIKEY_BUILD/serverCommon"
 
 MIKEY_BUILD="/usr/local/mikey"
 
@@ -73,8 +82,18 @@ mkdir -p $MIKEY_LOG
 chown -R mikey:mikey $MIKEY_LOG
 chmod a+rw -R $MIKEY_LOG
 
-#swap instructions here:
-#http://www.cyberciti.biz/faq/linux-add-a-swap-file-howto/
+su mikey
 
 #nagios instructions here:
 #http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
+#put these things in /home/mikey/.bashrc
+#export NODE_ENV="development"
+#export MIKEY_SOURCE="/home/mikey/source"
+#export MIKEY_BUILD="/usr/local/mikey"
+#export SERVER_COMMON="$MIKEY_BUILD/serverCommon"
+
+cd /home/mikey
+mkdir source
+cd source
+
+git clone git@github.com:meetmikey/serverTools.git
