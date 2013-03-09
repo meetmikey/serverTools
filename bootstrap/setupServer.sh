@@ -142,4 +142,6 @@ cd /usr/local/mikey
 mkdir keys
 #copy in meetmikey.key, meetmikey.com.crt, gd_cert1.crt, gd_cert2.crt
 
+#Pick one...
 #/home/mikey/source/serverTools/build/buildAPIServer.sh
+#/home/mikey/source/serverTools/build/buildMailServer.sh
