@@ -1,5 +1,3 @@
-#!/bin/sh
-
 mkdir -p $MIKEY_SOURCE
 
 BRANCH="master"
