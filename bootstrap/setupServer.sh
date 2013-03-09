@@ -52,6 +52,8 @@ cp -r elasticsearch-servicewrapper/service /usr/local/elasticsearch/bin/
 
 #note: when starting ES for the first time, we need to run serverCommon/esScripts/createIndex.sh
 
+sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.7.0
+
 useradd mikey
 passwd mikey #(and give him a password)
 
