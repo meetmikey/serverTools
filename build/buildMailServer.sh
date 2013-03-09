@@ -9,7 +9,8 @@ PROGRAMS=( mikeyAPI mikeymail mailReader )
 
 #Clone only needs to run the first time.
 #git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverCommon.git $MIKEY_SOURCE/serverCommon
-#git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeyAPI.git $MIKEY_SOURCE/mikeyAPI
+#git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeymail.git $MIKEY_SOURCE/mikeymail
+#git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mailReader.git $MIKEY_SOURCE/mailReader
 
 for i in "${REPOSITORIES[@]}"
 do
@@ -20,10 +21,6 @@ do
   rsync -rq --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
   cd $MIKEY_BUILD/$i
 done
-
-#these need to be run as root, so just leave it running...
-#/usr/local/elasticsearch/bin/service/elasticsearch stop
-#/usr/local/elasticsearch/bin/service/elasticsearch start
 
 for i in "${PROGRAMS[@]}"
 do

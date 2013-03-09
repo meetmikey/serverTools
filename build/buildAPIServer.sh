@@ -21,10 +21,6 @@ do
   cd $MIKEY_BUILD/$i
 done
 
-#these need to be run as root, so just leave it running...
-#/usr/local/elasticsearch/bin/service/elasticsearch stop
-#/usr/local/elasticsearch/bin/service/elasticsearch start
-
 for i in "${PROGRAMS[@]}"
 do
   cd $MIKEY_BUILD/$i
