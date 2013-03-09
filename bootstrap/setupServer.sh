@@ -84,6 +84,21 @@ mkdir -p $MIKEY_LOG
 chown -R mikey:mikey $MIKEY_LOG
 chmod a+rw -R $MIKEY_LOG
 
+#in /etc/rc.local, add some subset of...
+#/usr/local/elasticsearch/bin/service/elasticsearch start
+#sleep 5
+
+#sudo -u mikey /usr/local/mikey/mikeymail/stop.sh
+#sudo -u mikey /usr/local/mikey/mikeymail/start.sh
+
+#sudo -u mikey /usr/local/mikey/mailReader/stop.sh
+#sudo -u mikey /usr/local/mikey/mailReader/start.sh
+
+#sudo -u mikey /usr/local/mikey/mikeyAPI/stop.sh
+#sudo -u mikey /usr/local/mikey/mikeyAPI/start.sh
+
+
+
 su mikey
 
 #nagios instructions here:
@@ -106,3 +121,10 @@ mkdir source
 cd source
 
 git clone git@github.com:meetmikey/serverTools.git
+git clone git@github.com:meetmikey/serverCommon.git
+
+#pick the one(s) you need...
+git clone git@github.com:meetmikey/mikeymail.git
+git clone git@github.com:meetmikey/mailReader.git
+git clone git@github.com:meetmikey/mikeyAPI.git
+
