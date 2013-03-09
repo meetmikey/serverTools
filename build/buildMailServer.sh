@@ -4,8 +4,8 @@ mkdir -p $MIKEY_SOURCE
 
 BRANCH="master"
 
-REPOSITORIES=( serverCommon mikeyAPI )
-PROGRAMS=( mikeyAPI )
+REPOSITORIES=( serverCommon mikeymail mailReader )
+PROGRAMS=( mikeyAPI mikeymail mailReader )
 
 #Clone only needs to run the first time.
 #git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverCommon.git $MIKEY_SOURCE/serverCommon

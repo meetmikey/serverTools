@@ -113,18 +113,33 @@ cd /home/mikey
 mkdir .ssh
 cd .ssh
 ssh-keygen -t rsa -C "mikey@mikeyteam.com"
-#copy id_rsa.pub into github under the 'meetmikeygit' account
-#https://github.com/settings/ssh
+
+#vi authorized_keys
+#add ~/.ssh/id_rsa.pub values from any local machines that should be able to connect directly as mikey
+#chmod 600 authorized_keys
 
 cd /home/mikey
 mkdir source
 cd source
 
-git clone git@github.com:meetmikey/serverTools.git
-git clone git@github.com:meetmikey/serverCommon.git
+git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverTools.git
+git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverCommon.git
+git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeyAPI.git
 
 #pick the one(s) you need...
-git clone git@github.com:meetmikey/mikeymail.git
-git clone git@github.com:meetmikey/mailReader.git
-git clone git@github.com:meetmikey/mikeyAPI.git
+git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeymail.git
+git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mailReader.git
+git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeyAPI.git
 
+#Edit serverCommon/conf.js to add mongo credentials, etc.
+#Now commit this change so future pulls will merge
+git config --global user.email "mikey@mikeyteam.com"
+git config --global user.name "Mikey"
+git commit -a
+
+#for API server only...
+cd /usr/local/mikey
+mkdir keys
+#copy in meetmikey.key, meetmikey.com.crt, gd_cert1.crt, gd_cert2.crt
+
+#/home/mikey/source/serverTools/build/buildAPIServer.sh
