@@ -24,11 +24,11 @@ rm -f node-v0.8.20.tar.gz
 
 #scons (needed to build mongodb)
 wget http://sourceforge.net/projects/scons/files/scons/2.2.0/scons-2.2.0.tar.gz/download
-tar xvzf scons-2.2.0.tar.gz
+tar download
 cd scons-2.2.0
 python setup.py install
 cd ../
-rm -f scons-2.2.0.tar.gz
+rm -f download
 
 #mongodb
 wget http://downloads.mongodb.org/src/mongodb-src-r2.2.3.tar.gz
