@@ -102,7 +102,7 @@ su mikey
 #nagios instructions here:
 #http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
 #put these things in /home/mikey/.bashrc
-#export NODE_ENV="development"
+#export NODE_ENV="production"
 #export MIKEY_SOURCE="/home/mikey/source"
 #export MIKEY_BUILD="/usr/local/mikey"
 #export SERVER_COMMON="$MIKEY_BUILD/serverCommon"
