@@ -86,14 +86,14 @@ chmod a+rw -R $MIKEY_LOG
 #/usr/local/elasticsearch/bin/service/elasticsearch start
 #sleep 5
 
-#sudo -u mikey /usr/local/mikey/mikeymail/stop.sh
-#sudo -u mikey /usr/local/mikey/mikeymail/start.sh
+#su - mikey -c "/usr/local/mikey/mikeymail/stop.sh"
+#su - mikey -c "/usr/local/mikey/mikeymail/start.sh"
 
-#sudo -u mikey /usr/local/mikey/mailReader/stop.sh
-#sudo -u mikey /usr/local/mikey/mailReader/start.sh
+#su - mikey -c "/usr/local/mikey/mailReader/stop.sh"
+#su - mikey -c "/usr/local/mikey/mailReader/start.sh"
 
-#sudo -u mikey /usr/local/mikey/mikeyAPI/stop.sh
-#sudo -u mikey /usr/local/mikey/mikeyAPI/start.sh
+#su - mikey -c "/usr/local/mikey/mikeyAPI/stop.sh"
+#su - mikey -c "/usr/local/mikey/mikeyAPI/start.sh"
 
 
 
