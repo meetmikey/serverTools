@@ -2,7 +2,7 @@ mkdir -p $MIKEY_SOURCE
 
 BRANCH="master"
 
-REPOSITORIES=( serverCommon mikeyAPI )
+REPOSITORIES=( serverTools serverCommon mikeyAPI )
 PROGRAMS=( mikeyAPI )
 
 #Clone only needs to run the first time.

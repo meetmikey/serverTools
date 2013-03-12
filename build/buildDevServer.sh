@@ -2,7 +2,7 @@ mkdir -p $MIKEY_SOURCE
 
 BRANCH="master"
 
-REPOSITORIES=( serverCommon mikeymail mailReader mikeyAPI )
+REPOSITORIES=( serverTools serverCommon mikeymail mailReader mikeyAPI )
 PROGRAMS=( mikeymail mailReader mikeyAPI )
 
 #Clone only needs to run the first time.
