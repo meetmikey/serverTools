@@ -10,7 +10,7 @@ var conf = require(serverCommon + '/conf')
   , MailModel = require(serverCommon + '/schema/mail').MailModel
 
 var BATCH_SIZE = 100;
-var UPDATE_ALL = true;
+var UPDATE_ALL = false;
 var SHARD_KEY_FIELD = 'shardKey';
 
 var run = function() {
