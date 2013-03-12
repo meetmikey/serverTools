@@ -1,0 +1,13 @@
+{
+  "name": "Mikey-ServerTools",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+  },
+  "engines": {
+    "node": "0.8.x"
+  },
+  "env": {
+    "PYTHON": "/opt/local/bin/python2.7"
+  }
+}
