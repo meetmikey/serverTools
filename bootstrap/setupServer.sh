@@ -53,16 +53,25 @@ cp -r elasticsearch-servicewrapper/service /usr/local/elasticsearch/bin/
 #note: when starting ES for the first time, we need to run serverCommon/esScripts/createIndex.sh
 
 sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.7.0
-#swap instructions here:
-#http://www.cyberciti.biz/faq/linux-add-a-swap-file-howto/
 
 #nagios instructions here:
 #http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
 
 
+#iptables
 iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8080
 iptables -t nat -I OUTPUT -p tcp -d 127.0.0.1 --dport 443 -j REDIRECT --to-ports 8080
 /etc/init.d/iptables save
+
+
+#swap
+#rule of thumb, swap should be 2 x memory
+dd if=/dev/zero of=/swap1 bs=1024 count=3565158 #(3.4GB)
+mkswap /swap1
+chown root:root /swap1
+chmod 0600 /swap1
+swapon /swap1
+echo "/swap1 swap swap defaults 0 0" >> /etc/fstab
 
 
 # SET UP MIKEY!
@@ -122,7 +131,6 @@ cd source
 
 git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverTools.git
 git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverCommon.git
-git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeyAPI.git
 
 #pick the one(s) you need...
 git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeymail.git
@@ -133,7 +141,7 @@ git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeyAPI.git
 #Now commit this change so future pulls will merge
 git config --global user.email "mikey@mikeyteam.com"
 git config --global user.name "Mikey"
-git commit -a
+#git commit -a
 
 #for API server only...
 cd /usr/local/mikey
