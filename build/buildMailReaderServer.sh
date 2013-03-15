@@ -2,12 +2,12 @@ mkdir -p $MIKEY_SOURCE
 
 BRANCH="master"
 
-REPOSITORIES=( serverTools serverCommon mikeymail )
-PROGRAMS=( mikeymail )
+REPOSITORIES=( serverTools serverCommon mailReader )
+PROGRAMS=( mailReader )
 
 #Clone only needs to run the first time.
 #git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverCommon.git $MIKEY_SOURCE/serverCommon
-#git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeymail.git $MIKEY_SOURCE/mikeymail
+#git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mailReader.git $MIKEY_SOURCE/mailReader
 
 for i in "${REPOSITORIES[@]}"
 do
