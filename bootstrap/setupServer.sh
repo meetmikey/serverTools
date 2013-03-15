@@ -78,6 +78,21 @@ chmod 0600 /swap1
 swapon /swap1
 echo "/swap1 swap swap defaults 0 0" >> /etc/fstab
 
+#NewRelic
+#RHEL
+rpm -Uvh http://download.newrelic.com/pub/newrelic/el5/i386/newrelic-repo-5-3.noarch.rpm
+yum install -y newrelic-sysmond
+nrsysmond-config --set license_key=a259f8b13662ce34e45a90b7a8d16ebab2e14efb
+/etc/init.d/newrelic-sysmond start
+#Ubuntu
+wget -O /etc/apt/sources.list.d/newrelic.list http://download.newrelic.com/debian/newrelic.list
+apt-key adv --keyserver hkp://subkeys.pgp.net --recv-keys 548C16BF
+apt-get update
+apt-get install -y newrelic-sysmond
+nrsysmond-config --set license_key=a259f8b13662ce34e45a90b7a8d16ebab2e14efb
+/etc/init.d/newrelic-sysmond start
+
+
 
 # SET UP MIKEY!
 #########################
