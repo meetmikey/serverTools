@@ -1,5 +1,10 @@
 sudo -s
 
+#check if the disk is fully available
+df -h
+#if not, run...
+#resize2fs /dev/sda1
+
 yum update -y
 
 yum install -y gcc-c++ make openssl-devel git
