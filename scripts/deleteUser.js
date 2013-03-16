@@ -34,7 +34,7 @@ var initActions = [
   , appInitUtils.CONNECT_MONGO
 ];
 
-appInitUtils.initApp( 'deletUser', initActions, function() {
+appInitUtils.initApp( 'deletUser', initActions, conf, function() {
 
   var deleteUser = {
     
