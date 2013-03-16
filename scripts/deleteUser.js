@@ -22,7 +22,7 @@ var conf = require(serverCommon + '/conf')
   , attachmentUtils = require(serverCommon + '/lib/attachmentUtils')
   , prompt = require('prompt')
 
-var BATCH_SIZE = 1;
+var BATCH_SIZE = 50;
 
 if ( ( ! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
   winston.doWarn('Missing params: usage: node deleteUser.js <email> <also delete user object (true/false)>');
