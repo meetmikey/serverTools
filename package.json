@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+      "async": ">=0.2.6"
+    , "prompt": ">=0.2.9"
   },
   "engines": {
     "node": "0.8.x"

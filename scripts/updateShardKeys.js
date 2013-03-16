@@ -1,7 +1,7 @@
 var serverCommon = process.env.SERVER_COMMON;
 
 var conf = require(serverCommon + '/conf')
-  , async = require(serverCommon + '/node_modules/async')
+  , async = require('async')
   , winston = require (serverCommon + '/lib/winstonWrapper').winston
   , mongoUtils = require(serverCommon + '/lib/mongoUtils')
   , mongoose = require(serverCommon + '/lib/mongooseConnect')
