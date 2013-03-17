@@ -8,7 +8,7 @@ var conf = require(serverCommon + '/conf')
   , prompt = require('prompt')
 
 if ( ( ! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
-  winston.doWarn('Missing params: usage: node deleteUser.js <email> <also delete user object (true/false)>');
+  winston.doWarn('Missing params: usage: node resetUser.js <email>');
   process.exit(1);
 }
 
@@ -17,43 +17,42 @@ var initActions = [
   , appInitUtils.CONNECT_MONGO
 ];
 
-appInitUtils.initApp( 'deletUser', initActions, conf, function() {
+appInitUtils.initApp( 'resetUser', initActions, conf, function() {
 
-  var deleteUser = {
+  var resetUser = {
     
     run: function( callback ) {
 
       var userEmail = process.argv[2];
-      var deleteUserObject = false;
-      if ( ( process.argv.length >= 4 ) && ( process.argv[3] == 'true' ) ) {
-        deleteUserObject = true;
-      }
 
       prompt.start();
-      var message = 'This will delete EVERYTHING about this user';
-      if ( deleteUserObject ) {
-        message += ', including the user itself';
-      }
-      message += '.  Are you SURE?';
+      var message = 'This will reset ALL data for this user.  Are you SURE?';
       console.log();
       console.log( message );
 
-      var deletePrompt = 'delete this user? (y/n)'
-      prompt.get([deletePrompt], function (err, result) {
+      var resetPrompt = 'reset this user? (y/n)'
+      prompt.get([resetPrompt], function (err, result) {
         if ( err ) {
           callback( winston.makeError('prompt error', {promptError: err}) );
 
-        } else if ( ( ! result ) || ( ! result[deletePrompt] ) || ( result[deletePrompt] !== 'y' ) ) {
+        } else if ( ( ! result ) || ( ! result[resetPrompt] ) || ( result[resetPrompt] !== 'y' ) ) {
           console.log('Aborted!');
           callback();
 
         } else {
-          deleteUserData.performUserDelete( userEmail, deleteUserObject, callback );
+          deleteUserData.performUserDelete( userEmail, false, function( err ) {
+            if ( err ) {
+              callback( err );
+
+            } else {
+              addUserToDownloadQueue.addUser( userEmail, callback );
+            }
+          });
         }
       });
     }
 
-    , finish: function( err ) {
+    , finish: function(err) {
       if ( err ) {
         winston.handleError( err );
       }
@@ -62,5 +61,5 @@ appInitUtils.initApp( 'deletUser', initActions, conf, function() {
   }
 
   //Do it.
-  deleteUser.run( deleteUser.finish );
+  resetUser.run( resetUser.finish );
 });
