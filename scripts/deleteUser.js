@@ -1,7 +1,7 @@
 var serverCommon = process.env.SERVER_COMMON;
 
 var conf = require(serverCommon + '/conf')
-  , deleteUserData = require('../lib/deleteUserData')
+  , deleteUserUtils = require('../lib/deleteUserUtils')
   , appInitUtils = require(serverCommon + '/lib/appInitUtils')
   , winston = require(serverCommon + '/lib/winstonWrapper').winston
   , mongoose = require(serverCommon + '/lib/mongooseConnect').mongoose
@@ -48,7 +48,7 @@ appInitUtils.initApp( 'deletUser', initActions, conf, function() {
           callback();
 
         } else {
-          deleteUserData.performUserDelete( userEmail, deleteUserObject, callback );
+          deleteUserUtils.performUserDelete( userEmail, deleteUserObject, callback );
         }
       });
     }

@@ -1,7 +1,6 @@
 var serverCommon = process.env.SERVER_COMMON;
 
 var conf = require(serverCommon + '/conf')
-  , deleteUserUtils = require('../lib/deleteUserUtils')
   , userQueueUtils = require('../lib/userQueueUtils')
   , appInitUtils = require(serverCommon + '/lib/appInitUtils')
   , winston = require(serverCommon + '/lib/winstonWrapper').winston
@@ -9,7 +8,7 @@ var conf = require(serverCommon + '/conf')
   , prompt = require('prompt')
 
 if ( ( ! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
-  winston.doWarn('Missing params: usage: node resetUser.js <email>');
+  winston.doWarn('Missing params: usage: node addUserToDownloadQueue.js <email>');
   process.exit(1);
 }
 
@@ -18,37 +17,30 @@ var initActions = [
   , appInitUtils.CONNECT_MONGO
 ];
 
-appInitUtils.initApp( 'resetUser', initActions, conf, function() {
+appInitUtils.initApp( 'addUserToDownloadQueue', initActions, conf, function() {
 
-  var resetUser = {
+  var addUserToDownloadQueue = {
     
     run: function( callback ) {
 
       var userEmail = process.argv[2];
 
       prompt.start();
-      var message = 'This will reset ALL data for this user.  Are you SURE?';
+      var message = 'This will add this user to the download queue.  Are you SURE?';
       console.log();
       console.log( message );
 
-      var resetPrompt = 'reset this user? (y/n)'
-      prompt.get([resetPrompt], function (err, result) {
+      var addUserPrompt = 'add this user to the download queue? (y/n)'
+      prompt.get([addUserPrompt], function (err, result) {
         if ( err ) {
           callback( winston.makeError('prompt error', {promptError: err}) );
 
-        } else if ( ( ! result ) || ( ! result[resetPrompt] ) || ( result[resetPrompt] !== 'y' ) ) {
+        } else if ( ( ! result ) || ( ! result[addUserPrompt] ) || ( result[addUserPrompt] !== 'y' ) ) {
           console.log('Aborted!');
           callback();
 
         } else {
-          deleteUserUtils.performUserDelete( userEmail, false, function( err ) {
-            if ( err ) {
-              callback( err );
-
-            } else {
-              userQueueUtils.addUserToDownloadQueue( userEmail, callback );
-            }
-          });
+          userQueueUtils.addUserToDownloadQueue( userEmail, callback );
         }
       });
     }
@@ -62,5 +54,5 @@ appInitUtils.initApp( 'resetUser', initActions, conf, function() {
   }
 
   //Do it.
-  resetUser.run( resetUser.finish );
+  addUserToDownloadQueue.run( addUserToDownloadQueue.finish );
 });
