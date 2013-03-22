@@ -55,7 +55,7 @@ cp ../config/elasticsearch.yml /usr/local/elasticsearch/config/
 git clone https://github.com/elasticsearch/elasticsearch-servicewrapper.git
 cp -r elasticsearch-servicewrapper/service /usr/local/elasticsearch/bin/
 
-#note: when starting ES for the first time, we need to run serverCommon/esScripts/createIndex.sh
+#note: when starting ES for the first time, we need to run serverTools/scripts/es/bootstrap.sh
 
 sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.7.0
 
