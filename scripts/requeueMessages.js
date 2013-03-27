@@ -33,13 +33,18 @@ appInitUtils.initApp( 'requeueMessages', initActions, conf, function() {
         var inAzure = true;
         sqsConnect.addMessageToMailReaderQueue ({'userId' : mail.userId, 'path' : mail.s3Path, 'mailId' : mail._id, 'inAzure' : inAzure});
 
-        console.log (https.globalAgent.sockets['sqs.us-east-1.amazonaws.com:443'].length)
-        console.log ('sockets', Object.keys(https.globalAgent.sockets).length);
-        console.log ('requests', Object.keys(https.globalAgent.requests).length);
-
+        if (https.globalAgent.sockets['sqs.us-east-1.amazonaws.com:443']) {
+          console.log ('socketLength', https.globalAgent.sockets['sqs.us-east-1.amazonaws.com:443'].length)
+        }
 
       });
     }
   });
+
+  setInterval (function () {
+    if (https.globalAgent.sockets['sqs.us-east-1.amazonaws.com:443']) {
+      console.log ('socketLength', https.globalAgent.sockets['sqs.us-east-1.amazonaws.com:443'].length)
+    }
+  }, 200);
 
 });
