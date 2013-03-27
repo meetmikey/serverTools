@@ -1,7 +1,6 @@
 var serverCommon = process.env.SERVER_COMMON;
 
-var constants = require ('../constants'),
-    winston = require (serverCommon + '/lib/winstonWrapper').winston,
+var winston = require (serverCommon + '/lib/winstonWrapper').winston,
     sqsConnect = require (serverCommon + '/lib/sqsConnect'),
     cloudStorageUtils = require (serverCommon + '/lib/cloudStorageUtils'),
     uploadUtils = require ('./uploadUtils'),
