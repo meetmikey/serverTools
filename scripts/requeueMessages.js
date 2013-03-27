@@ -3,6 +3,8 @@ var serverCommon = process.env.SERVER_COMMON;
 var winston = require (serverCommon + '/lib/winstonWrapper').winston,
     sqsConnect = require (serverCommon + '/lib/sqsConnect'),
     cloudStorageUtils = require (serverCommon + '/lib/cloudStorageUtils'),
+    appInitUtils = require (serverCommon + '/lib/appInitUtils'),
+    conf = require (serverCommon + '/conf'),
     mongoose = require (serverCommon + '/lib/mongooseConnect').mongoose;
 
 var MailModel = mongoose.model ('Mail');
