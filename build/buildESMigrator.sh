@@ -6,7 +6,6 @@ REPOSITORIES=( serverTools serverCommon esMigration )
 
 #Clone only needs to run the first time.
 #git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverCommon.git $MIKEY_SOURCE/serverCommon
-#git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeyAPI.git $MIKEY_SOURCE/mikeyAPI
 git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/esMigration.git $MIKEY_SOURCE/esMigration
 
 for i in "${REPOSITORIES[@]}"
