@@ -26,7 +26,6 @@ appInitUtils.initApp( 'requeueMessages', initActions, conf, function() {
     }
     else if (foundMails) {
 
-
       winston.doInfo ('About to send messages to queue', {numMessages : foundMails.length});
 
       foundMails.forEach (function (mail) {
