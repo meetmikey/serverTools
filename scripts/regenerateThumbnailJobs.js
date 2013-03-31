@@ -80,25 +80,25 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
     attachments.forEach (function (attachment) {
 
-      if (attachment.hash in done) {
-        return;
+      if (!(attachment.hash in done)) {
+
+        var cloudPath = cloudStorageUtils.getAttachmentPath (attachment);
+
+        var thumbnailJob = {
+          cloudPath : cloudPath,
+          isRollover : false,
+          resourceId : attachment._id,
+          hash : attachment.hash,
+          fileSize : attachment.fileSize,
+          jobType : 'thumbnail',
+          modelName : 'Attachment'
+        };
+
+        sqsConnect.addMessageToWorkerQueue (thumbnailJob);
+
+        done [attachment.hash] = 1;
+
       }
-
-      var cloudPath = cloudStorageUtils.getAttachmentPath (attachment);
-
-      var thumbnailJob = {
-        cloudPath : cloudPath,
-        isRollover : false,
-        resourceId : attachment._id,
-        hash : attachment.hash,
-        fileSize : attachment.fileSize,
-        jobType : 'thumbnail',
-        modelName : 'Attachment'
-      };
-
-      sqsConnect.addMessageToWorkerQueue (thumbnailJob);
-
-      done [attachment.hash] = 1;
 
     });
   
