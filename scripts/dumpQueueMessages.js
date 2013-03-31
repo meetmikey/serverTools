@@ -6,10 +6,6 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
     conf = require (serverCommon + '/conf');
 
 
-var messages = []
-
 sqsConnect.pollWorkerQueue (function (message, pollQueueCallback) {
-  messages.push (message)
-  fs.writeFile ('oldQueueMessages', messages)
   pollQueueCallback ()
 }, 109);
