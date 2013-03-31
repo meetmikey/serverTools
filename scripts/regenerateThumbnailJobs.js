@@ -53,8 +53,8 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
   var attachmentQuery = {
     image : {$exists : true}, 
-    imageThumbExists : {$exists : false}, 
-    imageThumbSkip : {$ne : false}
+    attachmentThumbExists : {$exists : false}, 
+    attachmentThumbSkip : {$ne : false}
   };
 
   AttachmentModel.find (attachmentQuery,
