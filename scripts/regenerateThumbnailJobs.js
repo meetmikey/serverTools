@@ -61,6 +61,7 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
   var attachmentQuery = {
     isImage : true, 
+    isPromoted : true,
     attachmentThumbExists : {$exists : false}, 
     attachmentThumbSkip : {$ne : false}
   };
