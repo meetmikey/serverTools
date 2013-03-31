@@ -18,6 +18,7 @@ var initActions = [
 appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
   // TODO : add some indexes
+  var limit = 5000;
 
   var linkInfoQuery = {
     image : {$exists : true}, 
@@ -26,6 +27,7 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
   LinkInfoModel.find (linkInfoQuery,
     '_id comparableURLHash image',
+    {limit : limit},
     function (err, linkInfos) {
     if (err) {
       winston.doMongoError ('Could not get mail', {err : err});
@@ -60,6 +62,7 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
   AttachmentModel.find (attachmentQuery,
     '_id hash fileSize',
+    {limit : limit},
     function (err, attachments) {
     if (err) {
       winston.doMongoError ('Could not get mail', {err : err});
@@ -67,8 +70,13 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
     }
 
     winston.doInfo ('About to send messages to queue', {numMessages : attachments.length});
+    var done = {};
 
     attachments.forEach (function (attachment) {
+
+      if (attachment.hash in done) {
+        return;
+      }
 
       var cloudPath = cloudStorageUtils.getAttachmentPath (attachment);
 
@@ -81,6 +89,8 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
       };
 
       sqsConnect.addMessageToWorkerQueue (thumbnailJob);
+
+      done [attachment.hash] = 1;
 
     });
   
