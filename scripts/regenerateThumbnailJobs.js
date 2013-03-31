@@ -17,9 +17,14 @@ var initActions = [
 
 appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
-  // TODO : add some indexes
-  var limit = 5000;
+  var limit = 100;
 
+  if (process.argv.length > 2) {
+    limit = parseInt (process.argv[2]);
+    console.log ('limit', limit);
+  }
+
+  // TODO : add some indexes
   var linkInfoQuery = {
     image : {$exists : true}, 
     imageThumbExists : {$exists : false}
@@ -84,6 +89,8 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
         cloudPath : cloudPath,
         isRollover : false,
         resourceId : attachment._id,
+        hash : attachment.hash,
+        fileSize : attachment.fileSize,
         jobType : 'thumbnail',
         modelName : 'Attachment'
       };
