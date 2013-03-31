@@ -4,6 +4,7 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
     sqsConnect = require (serverCommon + '/lib/sqsConnect'),
     appInitUtils = require (serverCommon + '/lib/appInitUtils'),
     conf = require (serverCommon + '/conf'),
+    cloudStorageUtils = require (serverCommon + '/lib/cloudStorageUtils'),
     mongoose = require (serverCommon + '/lib/mongooseConnect').mongoose;
 
 var LinkInfoModel = mongoose.model ('LinkInfo');
@@ -52,13 +53,13 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
   });
 
   var attachmentQuery = {
-    image : {$exists : true}, 
+    isImage : true, 
     attachmentThumbExists : {$exists : false}, 
     attachmentThumbSkip : {$ne : false}
   };
 
   AttachmentModel.find (attachmentQuery,
-    '_id image',
+    '_id hash fileSize',
     function (err, attachments) {
     if (err) {
       winston.doMongoError ('Could not get mail', {err : err});
@@ -69,8 +70,10 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
     attachments.forEach (function (attachment) {
 
+      var cloudPath = cloudStorageUtils.getAttachmentPath (attachment);
+
       var thumbnailJob = {
-        cloudPath : attachment.image,
+        cloudPath : cloudPath,
         isRollover : false,
         resourceId : attachment._id,
         jobType : 'thumbnail',
