@@ -80,6 +80,7 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
     winston.doInfo ('About to send messages to queue', {numMessages : attachments.length});
     var done = {};
 
+    var pushCount = 0;
     attachments.forEach (function (attachment) {
 
       if (!(attachment.hash in done)) {
@@ -100,6 +101,8 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
         done [attachment.hash] = 1;
 
+        pushCount+=1;
+        console.log (pushCount);
       }
 
     });
