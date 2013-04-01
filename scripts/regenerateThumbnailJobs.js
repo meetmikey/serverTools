@@ -27,7 +27,8 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
   // TODO : add some indexes
   var linkInfoQuery = {
     image : {$exists : true}, 
-    imageThumbExists : {$exists : false}
+    imageThumbExists : {$exists : false},
+    imageThumbErr : {$ne : true}
   };
 
   LinkInfoModel.find (linkInfoQuery,
@@ -63,7 +64,8 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
     isImage : true, 
     isPromoted : true,
     attachmentThumbExists : {$exists : false}, 
-    attachmentThumbSkip : {$ne : false}
+    attachmentThumbSkip : {$ne : false},
+    attachmentThumbErr : {$ne : true}
   };
 
   AttachmentModel.find (attachmentQuery,
