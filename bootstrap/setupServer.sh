@@ -139,6 +139,12 @@ chmod a+rw -R $MIKEY_LOG
 
 
 
+#vi /etc/security/limits.conf
+#have to log out and log back in for these changes
+#mikey soft nofile 32000
+#mikey hard nofile 32000
+
+
 su mikey
 
 #nagios instructions here:
@@ -148,11 +154,6 @@ su mikey
 #export MIKEY_SOURCE="/home/mikey/source"
 #export MIKEY_BUILD="/usr/local/mikey"
 #export SERVER_COMMON="$MIKEY_BUILD/serverCommon"
-
-#vi /etc/security/limits.conf
-#might have to restart or at least log out and log back in for these changes
-#mikey soft nofile 32000
-#mikey hard nofile 32000
 
 
 cd /home/mikey
