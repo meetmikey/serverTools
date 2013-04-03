@@ -5,6 +5,19 @@ df -h
 #if not, run...
 #resize2fs /dev/sda1
 
+#set the hostname...
+#on RHEL:
+vi /etc/sysconfig/network #change HOSTNAME to <somehost>.meetmikey.com
+#on debian
+vi /etc/hostname
+vi /etc/hosts #add <somehost>.meetmikey.com so it reads something like "127.0.0.1  tools.meetmikey.com localhost localhost.localdomain"
+hostname <somehost>.meetmikey.com
+#on RHEL:
+service network restart
+#on debian:
+/etc/init.d/networking restart
+#log out, log back in and check that the prompt has changed, and that the output of the "hostname" command is correct
+
 yum update -y
 
 yum install -y gcc-c++ make openssl-devel git

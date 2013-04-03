@@ -2,8 +2,7 @@ mkdir -p $MIKEY_SOURCE
 
 BRANCH="master"
 
-REPOSITORIES=( serverTools serverCommon mailReader )
-PROGRAMS=( mailReader )
+REPOSITORIES=( serverTools serverCommon )
 
 for i in "${REPOSITORIES[@]}"
 do
@@ -13,11 +12,4 @@ do
   rm -rf $MIKEY_BUILD/$i
   rsync -rq --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
   cd $MIKEY_BUILD/$i
-done
-
-for i in "${PROGRAMS[@]}"
-do
-  cd $MIKEY_BUILD/$i
-  ./stop.sh
-  ./start.sh
 done

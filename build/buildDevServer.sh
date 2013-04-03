@@ -5,14 +5,6 @@ BRANCH="master"
 REPOSITORIES=( serverTools serverCommon mikeymail mailReader mikeyAPI )
 PROGRAMS=( mikeymail mailReader mikeyAPI )
 
-#Clone only needs to run the first time.
-#First, put the machine's mikey ssh keys into github under the "meetmikeygit" account
-# (follow instructions here: https://help.github.com/articles/generating-ssh-keys)
-#git clone git@github.com:meetmikey/serverCommon.git $MIKEY_SOURCE/serverCommon
-#git clone git@github.com:meetmikey/mikeymail.git $MIKEY_SOURCE/mikeymail
-#git clone git@github.com:meetmikey/mailReader.git $MIKEY_SOURCE/mailReader
-#git clone git@github.com:meetmikey/mikeyAPI.git $MIKEY_SOURCE/mikeyAPI
-
 for i in "${REPOSITORIES[@]}"
 do
   cd $MIKEY_SOURCE/$i
