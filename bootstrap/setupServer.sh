@@ -158,8 +158,11 @@ su mikey
 
 cd /home/mikey
 mkdir .ssh
+chmod 700 .ssh
 cd .ssh
-ssh-keygen -t rsa -C "mikey@mikeyteam.com"
+touch authorized_keys
+chmod 600 authorized_keys
+#ssh-keygen -t rsa -C "mikey@mikeyteam.com"
 
 #vi authorized_keys
 #add ~/.ssh/id_rsa.pub values from any local machines that should be able to connect directly as mikey
