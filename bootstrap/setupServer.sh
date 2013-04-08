@@ -75,6 +75,9 @@ sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-ma
 #nagios instructions here:
 #http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
 
+#NRPE
+wget http://prdownloads.sourceforge.net/sourceforge/nagios/nrpe-2.14.tar.gz
+
 
 #iptables
 iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8080
