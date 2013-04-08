@@ -10,7 +10,7 @@ $cmd = "ps aux | grep node | grep " . $app . "  | grep -v forever | awk '{print 
 $nodePID = exec($cmd);
 
 if ( ! $nodePID ) {
-	echo "node CRIITCAL: no node PID found\n";
+	echo "node CRITICAL: no node PID found\n";
 	exit(2);
 }
 
