@@ -23,7 +23,7 @@ if (process.argv.length > 2) {
 
 appInitUtils.initApp( 'requeueMessages', initActions, conf, function() {
 
-  MailModel.find ({mmDone : true}, 
+  MailModel.find ({mmDone : true, 
     $or : [ {mailReaderState : {$exists : false}}, {mailReaderState : 'started'}, {mailReaderState : 'softFail'}, {mailReaderState : 'hardFail'} ] },
     's3Path _id userId uid',
     {limit : limit},
