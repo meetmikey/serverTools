@@ -79,9 +79,34 @@ sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-ma
 #nagios instructions here:
 #http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
 
-#NRPE
-wget http://prdownloads.sourceforge.net/sourceforge/nagios/nrpe-2.14.tar.gz
+#nagios plugins:
+cd /usr/local/source
+wget http://prdownloads.sourceforge.net/sourceforge/nagiosplug/nagios-plugins-1.4.16.tar.gz
+tar -xvzf nagios-plugins-1.4.16.tar.gz
+rm -f nagios-plugins-1.4.16.tar.gz
+cd nagios-plugins-1.4.16/
+./configure --with-nagios-user=nagios --with-nagios-group=nagios
+make
+make install
 
+#NRPE
+yum install -y xinetd
+cd /usr/local/source
+wget http://prdownloads.sourceforge.net/sourceforge/nagios/nrpe-2.14.tar.gz
+tar xvzf nrpe-2.14.tar.gz
+rm -f nrpe-2.14.tar.gz
+cd nrpe-2.14
+./configure
+make all
+make install-plugin
+make install-daemon
+make install-daemon-config
+make install-xinetd
+#edit /etc/xinetd.d/nrpe, comment out the "only_from" line (the security groups will enforce our firewalls)
+#Add the following entry for the NRPE daemon to the /etc/services file.
+#nrpe 5666/tcp # NRPE
+#restart xinetd
+service xinetd restart
 
 #iptables
 iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8080
