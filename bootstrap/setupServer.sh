@@ -97,7 +97,7 @@ wget http://prdownloads.sourceforge.net/sourceforge/nagios/nrpe-2.14.tar.gz
 tar xvzf nrpe-2.14.tar.gz
 rm -f nrpe-2.14.tar.gz
 cd nrpe-2.14
-./configure
+./configure --enable-command-args
 make all
 make install-plugin
 make install-daemon
