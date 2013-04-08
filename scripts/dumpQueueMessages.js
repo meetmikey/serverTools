@@ -6,6 +6,6 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
     conf = require (serverCommon + '/conf');
 
 
-sqsConnect.pollWorkerQueue (function (message, pollQueueCallback) {
+sqsConnect.pollMailReaderQueue (function (message, pollQueueCallback) {
   pollQueueCallback ()
-}, 109);
+}, 80);
