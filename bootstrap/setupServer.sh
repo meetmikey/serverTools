@@ -80,6 +80,7 @@ sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-ma
 #http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
 
 #nagios plugins:
+yum install -y php
 cd /usr/local/source
 wget http://prdownloads.sourceforge.net/sourceforge/nagiosplug/nagios-plugins-1.4.16.tar.gz
 tar -xvzf nagios-plugins-1.4.16.tar.gz
