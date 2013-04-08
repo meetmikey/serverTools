@@ -5,10 +5,6 @@ BRANCH="master"
 REPOSITORIES=( serverTools serverCommon mikeymail )
 PROGRAMS=( mikeymail )
 
-#Clone only needs to run the first time.
-#git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverCommon.git $MIKEY_SOURCE/serverCommon
-#git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeymail.git $MIKEY_SOURCE/mikeymail
-
 for i in "${REPOSITORIES[@]}"
 do
   cd $MIKEY_SOURCE/$i

@@ -5,6 +5,19 @@ df -h
 #if not, run...
 #resize2fs /dev/sda1
 
+#set the hostname...
+#on RHEL:
+vi /etc/sysconfig/network #change HOSTNAME to <somehost>.meetmikey.com
+#on debian
+vi /etc/hostname
+vi /etc/hosts #add <somehost>.meetmikey.com so it reads something like "127.0.0.1  tools.meetmikey.com localhost localhost.localdomain"
+hostname <somehost>.meetmikey.com
+#on RHEL:
+service network restart
+#on debian:
+/etc/init.d/networking restart
+#log out, log back in and check that the prompt has changed, and that the output of the "hostname" command is correct
+
 yum update -y
 
 yum install -y gcc-c++ make openssl-devel git
@@ -134,6 +147,12 @@ mikey soft nofile 32000
 mikey hard nofile 32000
 
 
+#vi /etc/security/limits.conf
+#have to log out and log back in for these changes
+#mikey soft nofile 32000
+#mikey hard nofile 32000
+
+
 su mikey
 
 #nagios instructions here:
@@ -145,11 +164,13 @@ su mikey
 #export SERVER_COMMON="$MIKEY_BUILD/serverCommon"
 
 
-
 cd /home/mikey
 mkdir .ssh
+chmod 700 .ssh
 cd .ssh
-ssh-keygen -t rsa -C "mikey@mikeyteam.com"
+touch authorized_keys
+chmod 600 authorized_keys
+#ssh-keygen -t rsa -C "mikey@mikeyteam.com"
 
 #vi authorized_keys
 #add ~/.ssh/id_rsa.pub values from any local machines that should be able to connect directly as mikey
