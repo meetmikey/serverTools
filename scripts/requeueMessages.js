@@ -14,12 +14,19 @@ var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
 
+var limit = 100;
+
+if (process.argv.length > 2) {
+  limit = parseInt (process.argv[2]);
+  console.log ('limit', limit);
+}
 
 appInitUtils.initApp( 'requeueMessages', initActions, conf, function() {
 
-  MailModel.find ({s3Path : {$exists : true}, 
-    $or : [ {mailReaderState : {$exists : false}}, {mailReaderState : 'softFail'}, {mailReaderState : 'hardFail'} ] },
+  MailModel.find ({mmDone : true, 
+    $or : [ {mailReaderState : {$exists : false}}, {mailReaderState : 'started'}, {mailReaderState : 'softFail'}, {mailReaderState : 'hardFail'} ] },
     's3Path _id userId uid',
+    {limit : limit},
     function (err, foundMails) {
     if (err) {
       winston.doMongoError ('Could not get mail', {err : err});

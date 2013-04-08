@@ -68,6 +68,10 @@ cp ../config/elasticsearch.yml /usr/local/elasticsearch/config/
 git clone https://github.com/elasticsearch/elasticsearch-servicewrapper.git
 cp -r elasticsearch-servicewrapper/service /usr/local/elasticsearch/bin/
 
+#elasticsearch increase number of open files
+* soft nofile 64000
+* hard nofile 64000
+
 #note: when starting ES for the first time, we need to run serverTools/scripts/es/bootstrap.sh
 
 sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.7.0
@@ -140,6 +144,10 @@ chmod a+rw -R $MIKEY_LOG
 #su - mikey -c "/usr/local/mikey/mikeyAPI/stop.sh"
 #su - mikey -c "/usr/local/mikey/mikeyAPI/start.sh"
 
+#vi /etc/security/limits.conf
+#might have to restart or at least log out and log back in for these changes
+mikey soft nofile 32000
+mikey hard nofile 32000
 
 
 #vi /etc/security/limits.conf
