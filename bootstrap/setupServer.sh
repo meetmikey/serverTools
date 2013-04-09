@@ -97,7 +97,8 @@ make
 make install
 
 #NRPE
-# on ubunut: apt-get install libssl-dev
+#Ubuntu
+apt-get install libssl-dev
 #RHEL
 yum install -y xinetd
 #Ubuntu
@@ -123,6 +124,9 @@ make install-xinetd
 service xinetd restart
 #Ubuntu
 /etc/init.d/xinetd restart
+wget http://downloads.sourceforge.net/project/pma-oss/nagios-plugins/check_log3.pl
+chmod +x check_log3.pl
+mv check_log3.pl /usr/local/nagios/libexec/
 #cd to serverTools/bootstrap/nrpe and run ./deployNRPE.sh
 
 #iptables
