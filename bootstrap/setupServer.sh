@@ -79,6 +79,9 @@ sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-ma
 #nagios instructions here:
 #http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
 
+useradd nagios
+passwd nagios
+
 #nagios plugins:
 yum install -y php
 cd /usr/local/source
@@ -108,6 +111,7 @@ make install-xinetd
 #nrpe 5666/tcp # NRPE
 #restart xinetd
 service xinetd restart
+#cd to serverTools/bootstrap/nrpe and run ./deployNRPE.sh
 
 #iptables
 iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8080

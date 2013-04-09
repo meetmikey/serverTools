@@ -1,7 +1,12 @@
 #!/usr/bin/php
 <?php
 
-$cmd = "curl -XGET 'http://localhost:9200/_cluster/health?pretty=true' | grep status | awk -F '\" : \"' '{print $2}' | awk -F '\"' '{print $1}'";
+$host = 'localhost';
+if ( $argc >= 2 ) {
+  $host = $argv[1];
+}
+
+$cmd = "curl -XGET 'http://" . $host . ":9200/_cluster/health?pretty=true' | grep status | awk -F '\" : \"' '{print $2}' | awk -F '\"' '{print $1}'";
 $esHealth = exec($cmd);
 
 //echo "health: $esHealth\n";
