@@ -86,7 +86,7 @@ passwd nagios
 #RHEL
 yum install -y php
 #Ubuntu
-sudo apt-get install -y php5
+sudo apt-get install -y php5 libssl-dev
 cd /usr/local/source
 wget http://prdownloads.sourceforge.net/sourceforge/nagiosplug/nagios-plugins-1.4.16.tar.gz
 tar -xvzf nagios-plugins-1.4.16.tar.gz
@@ -97,8 +97,6 @@ make
 make install
 
 #NRPE
-#Ubuntu
-apt-get install libssl-dev
 #RHEL
 yum install -y xinetd
 #Ubuntu
