@@ -27,4 +27,4 @@ chmod a+x $NAGIOS_PATH/libexec/custom/*
 
 $NAGIOS_PATH/bin/nagios -v $NAGIOS_PATH/etc/nagios.cfg
 
-su nagios -c "service nagios restart"
+service nagios restart
