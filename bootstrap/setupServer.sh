@@ -83,7 +83,10 @@ useradd nagios
 passwd nagios
 
 #nagios plugins:
+#RHEL
 yum install -y php
+#Ubuntu
+sudo apt-get install -y php5
 cd /usr/local/source
 wget http://prdownloads.sourceforge.net/sourceforge/nagiosplug/nagios-plugins-1.4.16.tar.gz
 tar -xvzf nagios-plugins-1.4.16.tar.gz
@@ -94,13 +97,20 @@ make
 make install
 
 #NRPE
+# on ubunut: apt-get install libssl-dev
+#RHEL
 yum install -y xinetd
+#Ubuntu
+sudo apt-get install -y xinetd
 cd /usr/local/source
 wget http://prdownloads.sourceforge.net/sourceforge/nagios/nrpe-2.14.tar.gz
 tar xvzf nrpe-2.14.tar.gz
 rm -f nrpe-2.14.tar.gz
 cd nrpe-2.14
+#RHEL
 ./configure --enable-command-args
+#Ubuntu
+./configure --enable-command-args --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu
 make all
 make install-plugin
 make install-daemon
@@ -109,8 +119,10 @@ make install-xinetd
 #edit /etc/xinetd.d/nrpe, comment out the "only_from" line (the security groups will enforce our firewalls)
 #Add the following entry for the NRPE daemon to the /etc/services file.
 #nrpe 5666/tcp # NRPE
-#restart xinetd
+#RHEL
 service xinetd restart
+#Ubuntu
+/etc/init.d/xinetd restart
 #cd to serverTools/bootstrap/nrpe and run ./deployNRPE.sh
 
 #iptables
@@ -133,14 +145,14 @@ echo "/swap1 swap swap defaults 0 0" >> /etc/fstab
 rpm -Uvh http://download.newrelic.com/pub/newrelic/el5/i386/newrelic-repo-5-3.noarch.rpm
 yum install -y newrelic-sysmond
 nrsysmond-config --set license_key=a259f8b13662ce34e45a90b7a8d16ebab2e14efb
-/etc/init.d/newrelic-sysmond start
+/etc/init.d/newrelic-sysmond restart
 #Ubuntu
 wget -O /etc/apt/sources.list.d/newrelic.list http://download.newrelic.com/debian/newrelic.list
 apt-key adv --keyserver hkp://subkeys.pgp.net --recv-keys 548C16BF
 apt-get update
 apt-get install -y newrelic-sysmond
 nrsysmond-config --set license_key=a259f8b13662ce34e45a90b7a8d16ebab2e14efb
-/etc/init.d/newrelic-sysmond start
+/etc/init.d/newrelic-sysmond restart
 
 
 
