@@ -44,6 +44,7 @@ appInitUtils.initApp( 'expungeDrafts', initActions, conf, function() {
           console.log ('links from draft' + mail._id, count);
         });
 
+        /*
         // delete links, attachments, that originated from the draft
         LinkModel.remove ({mailId : mail._id}, function (err) {
           if (err) {
@@ -55,7 +56,7 @@ appInitUtils.initApp( 'expungeDrafts', initActions, conf, function() {
           if (err) {
             winston.doMongoError (err);
           }
-        });
+        });*/
 
       });
     }
