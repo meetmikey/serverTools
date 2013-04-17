@@ -10,7 +10,6 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
 
 var MailModel = mongoose.model ('Mail');
 var LinkModel = mongoose.model ('Link');
-var linkModel = mongoose.model ('link');
 var UserModel = mongoose.model ('User');
 
 var initActions = [
