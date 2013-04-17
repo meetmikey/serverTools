@@ -44,7 +44,7 @@ appInitUtils.initApp( 'expungeDrafts', initActions, conf, function() {
           console.log ('links from draft' + mail._id, count);
         });
 
-        /*
+
         // delete links, attachments, that originated from the draft
         LinkModel.remove ({mailId : mail._id}, function (err) {
           if (err) {
@@ -52,6 +52,7 @@ appInitUtils.initApp( 'expungeDrafts', initActions, conf, function() {
           }
         });
 
+        /* dont remove the attachments until we migrate to having an attachment info model...
         AttachmentModel.remove ({mailId : mail._id}, function (err) {
           if (err) {
             winston.doMongoError (err);
