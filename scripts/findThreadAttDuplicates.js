@@ -18,7 +18,7 @@ var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
 
-var limit = 100;
+var limit = 50;
 
 if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
@@ -143,7 +143,14 @@ appInitUtils.initApp( 'findThreadAttDuplicates', initActions, conf, function() {
           console.log (earliestDate);
 
           // TODO : actually delete the duplicate
-          
+          filter.sentDate = {$ne : earliestDate};
+          AttachmentModel.remove (filter, function (err) {
+            if (err) {
+              cb (winston.makeMongoError (err));
+            } else {
+              console.log ('delete successful')
+            }
+          })
 
         }
       });
