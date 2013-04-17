@@ -10,7 +10,7 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
 
 var MailModel = mongoose.model ('Mail');
 var LinkModel = mongoose.model ('Link');
-var AttachmentModel = mongoose.model ('Attachment');
+var linkModel = mongoose.model ('link');
 var UserModel = mongoose.model ('User');
 
 var initActions = [
@@ -30,17 +30,17 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
   var total = 0;
   // for each user
   UserModel.findById ("5147afc4f287efc831000005", function (err, foundUser) {
-    // for each promoted attachment
-    LinkModel.find ({userId : foundUser._id})
+    // for each promoted link
+    LinkModel.find ({userId : foundUser._id, isPromoted : true})
       .limit (limit)
       .select ('gmThreadId comparableURLHash')
-      .exec (function (err, attachments) {
+      .exec (function (err, links) {
         if (err) {
 
         } else if (links && links.length) {
-          links.forEach ( function (attachment)  {
-            var hash = attachment.hash;
-            var gmThreadId = attachment.gmThreadId;
+          links.forEach ( function (link)  {
+            var hash = link.hash;
+            var gmThreadId = link.gmThreadId;
 
             LinkModel.count ({userId : foundUser._id, gmThreadId : gmThreadId, comparableURLHash : comparableURLHash}, function (err, count) {
               if (count > 1 && !(gmThreadId + "_"  + comparableURLHash in reported)) {
