@@ -24,7 +24,7 @@ if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
   console.log ('limit', limit);
 }
-/*
+
 appInitUtils.initApp( 'findThreadAttDuplicates', initActions, conf, function() {
   var reported = {}
   var dupes = 0;
@@ -69,8 +69,8 @@ setInterval (function () {
 }, 5000)
 
 });
-*/
 
+/*
 appInitUtils.initApp( 'findThreadAttDuplicates', initActions, conf, function() {
   var reported = {}
   var dupes = 0;
@@ -179,4 +179,4 @@ appInitUtils.initApp( 'findThreadAttDuplicates', initActions, conf, function() {
     console.log (dupes/total)
   }, 5000)
 
-});
+});*/
