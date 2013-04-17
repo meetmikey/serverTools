@@ -37,11 +37,7 @@ appInitUtils.initApp( 'expungeDrafts', initActions, conf, function() {
       winston.doInfo ('About to delete links attachments corresponding to drafts mails ', {numMessages : foundMails.length});
 
       foundMails.forEach (function (mail) {
-        console.log (mail);
-        LinkModel.count ({mailId : mail._id}, function (err, count) {
-          console.log ('links from draft' + mail._id, count);
-        });
-        /*
+
         // delete links, attachments, that originated from the draft
         LinkModel.remove ({mailId : mail._id}, function (err) {
           if (err) {
@@ -54,7 +50,7 @@ appInitUtils.initApp( 'expungeDrafts', initActions, conf, function() {
             winston.doMongoError (err);
           }
         });
-        */
+
       });
     }
   });
