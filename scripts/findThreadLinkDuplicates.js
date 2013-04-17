@@ -38,7 +38,7 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
 
         } else if (links && links.length) {
           links.forEach ( function (link)  {
-            var hash = link.hash;
+            var comparableURLHash = link.comparableURLHash;
             var gmThreadId = link.gmThreadId;
 
             LinkModel.count ({userId : foundUser._id, gmThreadId : gmThreadId, comparableURLHash : comparableURLHash}, function (err, count) {
