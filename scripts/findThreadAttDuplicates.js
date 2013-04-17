@@ -25,22 +25,35 @@ if (process.argv.length > 2) {
 }
 
 appInitUtils.initApp( 'findThreadAttDuplicates', initActions, conf, function() {
-
+  var reported = {}
+  var dupes = 0;
+  var total = 0;
   // for each user
   UserModel.findById ("5147afc4f287efc831000005", function (err, foundUser) {
     // for each promoted attachment
     AttachmentModel.find ({userId : foundUser._id})
       .limit (limit)
+      .select ('gmThreadId hash')
       .exec (function (err, attachments) {
         if (err) {
 
         } else if (attachments && attachments.length) {
           attachments.forEach ( function (attachment)  {
             var hash = attachment.hash;
-            var threadId = attachment.gmThreadId;
+            var gmThreadId = attachment.gmThreadId;
 
-            AttachmentModel.count ({userId : userId, gmThreadId : gmThreadId, hash : hash}, function (err, count) {
-              console.log ("count", count);
+            AttachmentModel.count ({userId : foundUser._id, gmThreadId : gmThreadId, hash : hash}, function (err, count) {
+              if (count > 1 && !(gmThreadId + "_"  + hash in reported)) {
+                console.log ("count", count);
+                console.log ("thread", gmThreadId);
+                console.log ("hash", hash);
+                reported [gmThreadId + "_" + hash] = 1;
+                dupes+=1
+                total +=1
+              } else {
+                console.log (count)
+                total +=1
+              }
             });
           });
         }
@@ -50,6 +63,8 @@ appInitUtils.initApp( 'findThreadAttDuplicates', initActions, conf, function() {
     // if so delete the later sentDate
   });
 
-
+setInterval (function () {
+  console.log (dupes/total)
+}, 5000)
 
 });
