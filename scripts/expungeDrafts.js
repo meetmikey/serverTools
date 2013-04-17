@@ -38,15 +38,18 @@ appInitUtils.initApp( 'expungeDrafts', initActions, conf, function() {
 
       foundMails.forEach (function (mail) {
         console.log (mail);
+        LinkModel.count ({mailId : mail._id}, function (err, count) {
+          console.log ('links from draft' + mail._id, count);
+        });
         /*
         // delete links, attachments, that originated from the draft
-        LinkModel.remove (mailId : mail._id, function (err) {
+        LinkModel.remove ({mailId : mail._id}, function (err) {
           if (err) {
             winston.doMongoError (err);
           }
         });
 
-        AttachmentModel.remove (mailId : mail._id, function (err) {
+        AttachmentModel.remove ({mailId : mail._id}, function (err) {
           if (err) {
             winston.doMongoError (err);
           }
