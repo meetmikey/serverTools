@@ -25,12 +25,13 @@ if (process.argv.length > 2) {
   console.log ('limit', limit);
 }
 
+
 appInitUtils.initApp( 'findThreadAttDuplicates', initActions, conf, function() {
   var reported = {}
   var dupes = 0;
   var total = 0;
   // for each user
-  UserModel.findById ("5147afc4f287efc831000005", function (err, foundUser) {
+  UserModel.findById ("517072f3d76a885823000006", function (err, foundUser) {
     // for each promoted attachment
     AttachmentModel.find ({userId : foundUser._id})
       .limit (limit)
@@ -69,114 +70,3 @@ setInterval (function () {
 }, 5000)
 
 });
-
-/*
-appInitUtils.initApp( 'findThreadAttDuplicates', initActions, conf, function() {
-  var reported = {}
-  var dupes = 0;
-  var total = 0;
-  // for each user
-  UserModel.find ({}, function (err, foundUsers) {
-
-    async.eachSeries (foundUsers, function (user, cb) {
-      findDupes (user._id, cb);
-    }, 
-    function (err) {
-      if (err) {
-        winston.handleError (err);
-      } else {
-        console.log ('all done for all users');
-      }
-    });
-  });
-
-  function findDupes (userId, findDupesCb) {
-    // for each promoted attachment
-    AttachmentModel.find ({userId : userId})
-      .limit (limit)
-      .select ('gmThreadId hash')
-      .exec (function (err, attachments) {
-        if (err) {
-          findDupesCb (winston.makeMongoError (err));
-        } 
-        else if (attachments && attachments.length) {
-
-          async.each (attachments, function (attachment, asyncCb)  {
-            var hash = attachment.hash;
-            var gmThreadId = attachment.gmThreadId;
-
-            AttachmentModel.count ({userId : userId, gmThreadId : gmThreadId, hash : hash}, function (err, count) {
-              if (err) {
-                asyncCb (winston.makeMongoError (err));
-              }
-              else if (count > 1 && !(gmThreadId + "_"  + hash in reported)) {
-                reported [gmThreadId + "_" + hash] = 1;
-                dupes+=1
-                total +=1
-                deleteDupes (userId, gmThreadId, hash, asyncCb);
-              } 
-              else {
-                console.log (count)
-                total +=1
-                asyncCb ();
-              }
-            });
-
-          },
-          function (err) {
-            if (err) {
-              findDupesCb (err);
-            } else {
-              console.log ('find dupes callback, user complete', userId);
-              findDupesCb ();
-            }
-          });
-        }
-        else {
-          console.log ('find dupes callback, user complete', userId);
-          findDupesCb ();
-        }
-      })
-  }
-
-  function deleteDupes (userId, gmThreadId, hash, cb) {
-    var filter = {userId : userId, gmThreadId : gmThreadId, hash : hash};
-    AttachmentModel.find (filter)
-      .select ('gmThreadId hash sentDate')
-      .exec (function (err, dupes) {
-
-        if (err) {
-          cb (winston.makeMongoError (err));
-        } else if (dupes && dupes.length) {
-          var earliestDate = dupes[0].sentDate;
-
-          dupes.forEach (function (dupe) {
-            if (dupe.sentDate < earliestDate) {
-              dupe.earliestDate = dupe.sentDate;
-            }
-          });
-
-          console.log (filter);
-          console.log (earliestDate);
-
-          // TODO : actually delete the duplicate
-          filter.sentDate = {$ne : earliestDate};
-          AttachmentModel.remove (filter, function (err) {
-            if (err) {
-              cb (winston.makeMongoError (err));
-            } else {
-              console.log ('delete successful')
-              cb ();
-            }
-          })
-
-        }
-      });
-  }
-
-
-  setInterval (function () {
-    console.log (dupes/total)
-  }, 5000)
-
-});*/
