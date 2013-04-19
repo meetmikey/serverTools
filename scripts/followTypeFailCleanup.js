@@ -5,6 +5,7 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
     cloudStorageUtils = require (serverCommon + '/lib/cloudStorageUtils'),
     appInitUtils = require (serverCommon + '/lib/appInitUtils'),
     conf = require (serverCommon + '/conf'),
+    urlUtils = reuqire (serverCommon + '/urlUtils'),
     async = require ('async'),
     https = require ('https'),
     mongoose = require (serverCommon + '/lib/mongooseConnect').mongoose;
@@ -63,6 +64,9 @@ appInitUtils.initApp( 'followTypeFailCleanup', initActions, conf, function() {
             });       
 
           /*
+
+          linkInfo.followType = 'diffbot';
+          
           linkInfo.save (function (err) {
             if (err) {
               winston.doMongoError (err);
@@ -82,11 +86,13 @@ appInitUtils.initApp( 'followTypeFailCleanup', initActions, conf, function() {
                       if (!(link.userId in uniqueUsers)) {
                         uniqueUsers[link.userId] = 1;
                       
-                        link.isPromoted = true;
+                        if (!link.isPromoted) {
+                          link.isPromoted = true;
+                          link.save (function (err) {
+                          
+                          })
+                        }
 
-                        
-                        //link.save (function (err) {
-                        //})
                       }
                     });
 
