@@ -28,7 +28,7 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
   var dupes = 0;
   var total = 0;
   // for each user
-  UserModel.findById ("5147afc4f287efc831000005", function (err, foundUser) {
+  UserModel.findById ("517072f3d76a885823000006", function (err, foundUser) {
     // for each promoted link
     LinkModel.find ({userId : foundUser._id, isPromoted : true})
       .limit (limit)
