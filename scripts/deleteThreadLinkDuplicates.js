@@ -122,7 +122,7 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
               // kill all but one of the duplicates that share sentDate
               if (earliestSentDateIds.length > 1) {
                 
-                // remove the last element
+                // remove the last element (TODO: create a test case i don't trust this)
                 var keepId = earliestSentDateIds.pop();
 
                 winston.doInfo ('multiple id\'s share same sent date', {keep : keepId, toDelete : earliestSentDateIds});
