@@ -10,12 +10,24 @@ var conf = require(serverCommon + '/conf')
 
 var LinkModel = mongoose.model ('Link');
 var AttachmentModel = mongoose.model ('Attachment');
+var UserModel = mongoose.model ('User');
 
 var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
 
 appInitUtils.initApp( 'createDuplicateAttachmentAndLinks', initActions, conf, function() {
+
+  var user = new UserModel ({
+    "_id" : "5177016b738218636f00000a",
+    "email" : "sagar@mikeyteam.com"
+  })
+
+  user.save (function (err) {
+    if (err) {
+      console.error (err);
+    }
+  });
 
   var att1 = new AttachmentModel ({
     "__v" : 1,

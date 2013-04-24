@@ -7,6 +7,7 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
     mongoose = require (serverCommon + '/lib/mongooseConnect').mongoose;
 
 var AttachmentModel = mongoose.model ('Attachment');
+var AttachmentMRModel = mongoose.model ('AttachmentMR');
 var UserModel = mongoose.model ('User');
 
 var initActions = [
@@ -42,52 +43,36 @@ appInitUtils.initApp( 'deleteThreadAttDuplicates', initActions, conf, function()
   });
 
   function findDupes (userId, findDupesCb) {
-    // for each attachment
-    AttachmentModel.find ({userId : userId})
-      .limit (limit)
-      .select ('gmThreadId hash')
-      .exec (function (err, attachments) {
-        if (err) {
-          findDupesCb (winston.makeMongoError (err));
-        } 
-        else if (attachments && attachments.length) {
 
-          async.each (attachments, function (attachment, asyncCb)  {
-            var hash = attachment.hash;
-            var gmThreadId = attachment.gmThreadId;
+    AttachmentMRModel.collection.find({'_id.userId': userId, value : {$gt : 1}}, function (err, cursor) {
+      if (err) {
+        findDupesCb(winston.makeMongoError (err));
+      }
+      else {
+        cursor.toArray(function(err, attachments) {
+          if (err) {
+            findDupesCb(winston.makeMongoError (err));
+          }
+          else {
+            console.log (attachments);
+            async.each (attachments, 
+              function (attachment, asyncCb) {
+                deleteDupes (attachment._id.userId, attachment._id.gmThreadId, attachment._id.hash, asyncCb);
+              }, 
+              function (err) {
+                if (err) {
+                  findDupesCb (err);
+                }
+                else {
+                  findDupesCb ();
+                }
+              });
 
-            AttachmentModel.count ({userId : userId, gmThreadId : gmThreadId, hash : hash}, function (err, count) {
-              if (err) {
-                asyncCb (winston.makeMongoError (err));
-              }
-              else if (count > 1 && !(gmThreadId + "_"  + hash in reported)) {
-                reported [gmThreadId + "_" + hash] = 1;
-                dupes+=1
-                total +=1
-                deleteDupes (userId, gmThreadId, hash, asyncCb);
-              } 
-              else {
-                console.log (count)
-                total +=1
-                asyncCb ();
-              }
-            });
+          }
+        });
+      }
+    });
 
-          },
-          function (err) {
-            if (err) {
-              findDupesCb (err);
-            } else {
-              console.log ('find dupes callback, user complete', userId);
-              findDupesCb ();
-            }
-          });
-        }
-        else {
-          console.log ('find dupes callback, user complete', userId);
-          findDupesCb ();
-        }
-      });
   }
 
   function deleteDupes (userId, gmThreadId, hash, cb) {
