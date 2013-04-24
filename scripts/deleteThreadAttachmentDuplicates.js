@@ -14,13 +14,6 @@ var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
 
-var limit = 50;
-
-if (process.argv.length > 2) {
-  limit = parseInt (process.argv[2]);
-  console.log ('limit', limit);
-}
-
 
 appInitUtils.initApp( 'deleteThreadAttDuplicates', initActions, conf, function() {
   var reported = {}
@@ -54,7 +47,6 @@ appInitUtils.initApp( 'deleteThreadAttDuplicates', initActions, conf, function()
             findDupesCb(winston.makeMongoError (err));
           }
           else {
-            console.log (attachments);
             async.each (attachments, 
               function (attachment, asyncCb) {
                 deleteDupes (attachment._id.userId, attachment._id.gmThreadId, attachment._id.hash, asyncCb);
@@ -108,7 +100,6 @@ appInitUtils.initApp( 'deleteThreadAttDuplicates', initActions, conf, function()
               cb (winston.makeMongoError (err));
             } 
             else {
-              console.log (earliestSentDateIds)
               // kill all but one of the duplicates that share sentDate
               if (earliestSentDateIds.length > 1) {
 

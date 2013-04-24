@@ -16,12 +16,6 @@ var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
 
-var limit = 100;
-
-if (process.argv.length > 2) {
-  limit = parseInt (process.argv[2]);
-  console.log ('limit', limit);
-}
 
 appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() {
   var reported = {};
@@ -55,7 +49,6 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
             findDupesCb(winston.makeMongoError (err));
           }
           else {
-            console.log (links);
             async.each (links, 
               function (link, asyncCb) {
                 deleteDupes (link._id.userId, link._id.gmThreadId, link._id.comparableURLHash, asyncCb);
@@ -78,7 +71,6 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
 
 
   function deleteDupes (userId, gmThreadId, comparableURLHash, cb) {
-    console.log (arguments);
     var filter = {userId : userId, gmThreadId : gmThreadId, comparableURLHash : comparableURLHash};
     LinkModel.find (filter)
       .select ('gmThreadId comparableURLHash sentDate')
