@@ -82,8 +82,8 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
           var earliestDate = dupes[0].sentDate;
 
           dupes.forEach (function (dupe) {
-            if (dupe.sentDate < earliestDate) {
-              dupe.earliestDate = dupe.sentDate;
+            if (dupe.sentDate.getTime() < earliestDate.getTime()) {
+              earliestDate = dupe.sentDate;
             }
           });
 
