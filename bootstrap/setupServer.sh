@@ -26,14 +26,14 @@ mkdir -p /usr/local/source
 cd /usr/local/source
 
 #node
-wget http://nodejs.org/dist/v0.8.20/node-v0.8.20.tar.gz
-tar xvzf node-v0.8.20.tar.gz
-cd node-v0.8.20
+wget http://nodejs.org/dist/v0.10.5/node-v0.10.5.tar.gz
+tar xvzf node-v0.10.5.tar.gz
+cd node-v0.10.5
 ./configure
 make
 make install
 cd ../
-rm -f node-v0.8.20.tar.gz
+rm -f node-v0.10.5.tar.gz
 
 #forever
 /usr/local/bin/npm install forever -g
