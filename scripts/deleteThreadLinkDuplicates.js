@@ -106,7 +106,7 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
           // we'll need to arbitrarily delete all but one
           var earliestSentDateIds = [];
           dupes.forEach (function (dupe) {
-            if (dupe.sentDate == earliestDate) {
+            if (dupe.sentDate.getTime() == earliestDate.getTime()) {
               earliestSentDateIds.push (dupe._id);
             }
           });
@@ -127,16 +127,20 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
 
                 winston.doInfo ('multiple id\'s share same sent date', {keep : keepId, toDelete : earliestSentDateIds});
 
-                LinkModel.remove (earliestSentDateIds, function (err) {
-                  if (err) {
-                    cb (winston.makeMongoError (err));
-                  } 
-                  else {
-                    winston.doInfo ('delete successful', filter);
-                    cb ();
-                  }
-                });
-              
+
+
+                LinkModel.remove ({})
+                  .where ('_id').in (earliestSentDateIds)
+                  .exec (function (err) {
+                    if (err) {
+                      cb (winston.makeMongoError (err));
+                    } 
+                    else {
+                      winston.doInfo ('delete successful', filter);
+                      cb ();
+                    }
+                  });
+             
               } 
               else {
                 winston.doInfo ('delete successful', filter);

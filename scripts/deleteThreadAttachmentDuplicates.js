@@ -111,7 +111,7 @@ appInitUtils.initApp( 'deleteThreadAttDuplicates', initActions, conf, function()
           // we'll need to arbitrarily delete all but one
           var earliestSentDateIds = [];
           dupes.forEach (function (dupe) {
-            if (dupe.sentDate == earliestDate) {
+            if (dupe.sentDate.getTime() == earliestDate.getTime()) {
               earliestSentDateIds.push (dupe._id);
             }
           });
@@ -123,7 +123,7 @@ appInitUtils.initApp( 'deleteThreadAttDuplicates', initActions, conf, function()
               cb (winston.makeMongoError (err));
             } 
             else {
-
+              console.log (earliestSentDateIds)
               // kill all but one of the duplicates that share sentDate
               if (earliestSentDateIds.length > 1) {
 
@@ -132,15 +132,17 @@ appInitUtils.initApp( 'deleteThreadAttDuplicates', initActions, conf, function()
 
                 winston.doInfo ('multiple id\'s share same sent date', {keep : keepId, toDelete : earliestSentDateIds});
 
-                AttachmentModel.remove (earliestSentDateIds, function (err) {
-                  if (err) {
-                    cb (winston.makeMongoError (err));
-                  } 
-                  else {
-                    winston.doInfo ('delete successful', filter);
-                    cb ();
-                  }
-                });
+                AttachmentModel.remove ({})
+                  .where ('_id').in (earliestSentDateIds)
+                  .exec (function (err) {
+                    if (err) {
+                      cb (winston.makeMongoError (err));
+                    } 
+                    else {
+                      winston.doInfo ('delete successful', filter);
+                      cb ();
+                    }
+                  });
               
               } 
               else {
