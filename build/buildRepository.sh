@@ -38,6 +38,7 @@ fi
 echo "buildRepository: $REPOSITORY with branch $MIKEY_BRANCH..."
 
 cd $MIKEY_SOURCE/$REPOSITORY
+git fetch
 git checkout -t origin/$MIKEY_BRANCH
 git pull origin $MIKEY_BRANCH
 npm install
