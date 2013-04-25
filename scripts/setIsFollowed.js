@@ -67,7 +67,7 @@ exports.doBatch = function (skip, callback) {
                 winston.doWarn ('zero link records updated isFollowed for hash', {comparableURLHash : linkInfo.comparableURLHash});
               }
               else {
-                wiston.doInfo ('records affected', {num : num});
+                winston.doInfo ('records affected', {num : num});
               }
 
               asyncCb ();
