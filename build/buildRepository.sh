@@ -7,7 +7,6 @@ if [ ! $REPOSITORY ];
     exit 1
 fi
 
-
 mkdir -p $MIKEY_SOURCE
 
 BUILD_BRANCHES_FILE=$MIKEY_SOURCE/buildBranches.sh
@@ -41,6 +40,11 @@ cd $MIKEY_SOURCE/$REPOSITORY
 git fetch
 git checkout -t origin/$MIKEY_BRANCH
 git pull origin $MIKEY_BRANCH
+if [[ $2 == "clean" ]]
+  then
+    echo "cleaning node_modules..."
+    rm -rf $MIKEY_SOURCE/$REPOSITORY/node_modules
+fi
 npm install
 rm -rf $MIKEY_BUILD/$REPOSITORY
 rsync -rq --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
