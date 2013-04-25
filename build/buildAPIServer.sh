@@ -1,23 +1,13 @@
-mkdir -p $MIKEY_SOURCE
-
-BRANCH="master"
-
 REPOSITORIES=( serverTools serverCommon mikeyAPI )
 PROGRAMS=( mikeyAPI )
 
+
 for i in "${REPOSITORIES[@]}"
 do
-  cd $MIKEY_SOURCE/$i
-  git pull origin $BRANCH
-  npm install
-  rm -rf $MIKEY_BUILD/$i
-  rsync -rq --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
-  cd $MIKEY_BUILD/$i
+  ./buildRepository.sh $i
 done
 
 for i in "${PROGRAMS[@]}"
 do
-  cd $MIKEY_BUILD/$i
-  ./stop.sh
-  ./start.sh
+  ./startProgram.sh $i
 done
