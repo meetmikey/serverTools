@@ -8,7 +8,6 @@ if [ ! $PROGRAM ];
 fi
 
 echo "startProgram: $PROGRAM..."
-exit 0
 
 cd $MIKEY_BUILD/$PROGRAM
 ./stop.sh

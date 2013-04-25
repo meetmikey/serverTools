@@ -37,12 +37,12 @@ fi
 
 echo "buildRepository: $REPOSITORY with branch $MIKEY_BRANCH..."
 
-#cd $MIKEY_SOURCE/$REPOSITORY
-#git checkout -t origin/$MIKEY_BRANCH
-#git pull origin $MIKEY_BRANCH
-#npm install
-#rm -rf $MIKEY_BUILD/$REPOSITORY
-#rsync -rq --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
-#cd $MIKEY_BUILD/$REPOSITORY
+cd $MIKEY_SOURCE/$REPOSITORY
+git checkout -t origin/$MIKEY_BRANCH
+git pull origin $MIKEY_BRANCH
+npm install
+rm -rf $MIKEY_BUILD/$REPOSITORY
+rsync -rq --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
+cd $MIKEY_BUILD/$REPOSITORY
 
 echo "buildRepository $REPOSITORY done."
