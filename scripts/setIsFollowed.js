@@ -8,7 +8,6 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
 
 var LinkInfoModel = mongoose.model ('LinkInfo');
 var LinkModel = mongoose.model ('Link');
-var UserModel = mongoose.model ('User');
 
 var setIsFollowed = this;
 
@@ -44,6 +43,7 @@ exports.doBatch = function (skip, callback) {
   winston.doInfo ('dobatch',  {skip : skip});
   LinkInfoModel.find ({followType : {$ne : 'fail'}, followType : {$exists : true}})
     .limit (limit)
+    .select ('comparableURLHash')
     .sort ('comparableURLHash')
     .skip (skip)
     .exec (function (err, linkInfos) {
@@ -55,8 +55,6 @@ exports.doBatch = function (skip, callback) {
         winston.doInfo ('setting is followed for ', {links : numLinkInfos});
 
         async.each (linkInfos, function (linkInfo, asyncCb) {
-          // set the followtype to diffbot
-          //linkInfo.followType = 'diffbot';
 
           LinkModel.update ({comparableURLHash : linkInfo.comparableURLHash},
             {$set : {isFollowed : true}},
@@ -66,7 +64,7 @@ exports.doBatch = function (skip, callback) {
                 winston.doMongoError (err);
               }
               else if (num == 0) {
-                winston.doWarn ('zero link records updated isFollowed for hash', {comparableURLHash : comparableURLHash});
+                winston.doWarn ('zero link records updated isFollowed for hash', {comparableURLHash : linkInfo.comparableURLHash});
               }
 
               asyncCb ();
@@ -74,10 +72,11 @@ exports.doBatch = function (skip, callback) {
           }
           , function (err) {
 
-            if (numLinkInfos == limit) {
+            if (err) {
+              callback (err)
+            } else if (numLinkInfos == limit) {
               callback (null, skip + numLinkInfos);
-            }
-            else {
+            } else {
               callback ();
             }
           });

@@ -29,35 +29,7 @@ appInitUtils.initApp( 'createDuplicateAttachmentAndLinks', initActions, conf, fu
     }
   });
 
-  var att1 = new AttachmentModel ({
-    "__v" : 1,
-    "attachmentThumbExists" : true,
-    "contentType" : "image/png",
-    "docType" : "image",
-    "fileSize" : 258498,
-    "filename" : "image.png",
-    "gmMsgHex" : "13dd66761607820f",
-    "gmMsgId" : "1431412913935450639",
-    "gmThreadId" : "1431412913935450639",
-    "hash" : "e8c5b8877ccc7dc5ba59d2923e6a68cdcb3aa4a5f666e8f2ffa6d50dfe0aa8e0",
-    "isImage" : true,
-    "isPromoted" : true,
-    "mailCleanSubject" : "[StartX Community] Wish you had a better Gmail? Meet Mikey.",
-    "mailId" : "51770175bdcc7f2e6f001670",
-    "recipients" : [
-      {
-        "name" : "community@startx.stanford.edu",
-        "email" : "community@startx.stanford.edu"
-      }
-    ],
-    "sender" : {
-      "name" : "Andrew Lockhart",
-      "email" : "andrewjameslockhart@gmail.com"
-    },
-    "sentDate" : "2013-04-04T18:55:31Z",
-    "timestamp" : "2013-04-23T21:51:15.310Z",
-    "userId" : "5177016b738218636f00000a"
-  });
+
 
    att2 = new AttachmentModel ({
     "__v" : 1,
@@ -72,7 +44,7 @@ appInitUtils.initApp( 'createDuplicateAttachmentAndLinks', initActions, conf, fu
     "hash" : "e8c5b8877ccc7dc5ba59d2923e6a68cdcb3aa4a5f666e8f2ffa6d50dfe0aa8e0",
     "isImage" : true,
     "isPromoted" : true,
-    "mailCleanSubject" : "[StartX Community] Wish you had a better Gmail? Meet Mikey.",
+    "mailCleanSubject" : "ATTACHMENT TO DELETE",
     "mailId" : "51770175bdcc7f2e6f001670",
     "recipients" : [
       {
@@ -85,6 +57,36 @@ appInitUtils.initApp( 'createDuplicateAttachmentAndLinks', initActions, conf, fu
       "email" : "andrewjameslockhart@gmail.com"
     },
     "sentDate" : "2013-04-04T19:55:31Z",
+    "timestamp" : "2013-04-23T21:51:15.310Z",
+    "userId" : "5177016b738218636f00000a"
+  });
+
+  var att1 = new AttachmentModel ({
+    "__v" : 1,
+    "attachmentThumbExists" : true,
+    "contentType" : "image/png",
+    "docType" : "image",
+    "fileSize" : 258498,
+    "filename" : "image.png",
+    "gmMsgHex" : "13dd66761607820f",
+    "gmMsgId" : "1431412913935450639",
+    "gmThreadId" : "1431412913935450639",
+    "hash" : "e8c5b8877ccc7dc5ba59d2923e6a68cdcb3aa4a5f666e8f2ffa6d50dfe0aa8e0",
+    "isImage" : true,
+    "isPromoted" : true,
+    "mailCleanSubject" : "POTENTIAL ATTACHMENT TO KEEP",
+    "mailId" : "51770175bdcc7f2e6f001670",
+    "recipients" : [
+      {
+        "name" : "community@startx.stanford.edu",
+        "email" : "community@startx.stanford.edu"
+      }
+    ],
+    "sender" : {
+      "name" : "Andrew Lockhart",
+      "email" : "andrewjameslockhart@gmail.com"
+    },
+    "sentDate" : "2013-04-04T18:55:31Z",
     "timestamp" : "2013-04-23T21:51:15.310Z",
     "userId" : "5177016b738218636f00000a"
   });
@@ -102,7 +104,7 @@ appInitUtils.initApp( 'createDuplicateAttachmentAndLinks', initActions, conf, fu
     "hash" : "e8c5b8877ccc7dc5ba59d2923e6a68cdcb3aa4a5f666e8f2ffa6d50dfe0aa8e0",
     "isImage" : true,
     "isPromoted" : true,
-    "mailCleanSubject" : "[StartX Community] Wish you had a better Gmail? Meet Mikey.",
+    "mailCleanSubject" : "POTENTIAL ATTACHMENT TO KEEP 2",
     "mailId" : "51770175bdcc7f2e6f001670",
     "recipients" : [
       {
@@ -202,7 +204,7 @@ appInitUtils.initApp( 'createDuplicateAttachmentAndLinks', initActions, conf, fu
     "gmMsgId" : "1429765453680818359",
     "gmThreadId" : "1429765453680818359",
     "isPromoted" : false,
-    "mailCleanSubject" : "Daily Rollup",
+    "mailCleanSubject" : "Def not delete",
     "mailId" : "5146bef4caa56d9f52044356",
     "nonPromotableReason" : "sender",
     "recipients" : [
@@ -218,7 +220,7 @@ appInitUtils.initApp( 'createDuplicateAttachmentAndLinks', initActions, conf, fu
     },
     "sentDate" : "2013-03-17T14:29:51Z",
     "shardKey" : "f7bee",
-    "timestamp" : "2013-03-18T07:17:22.713Z",
+    "timestamp" : "2013-03-19T07:17:22.713Z",
     "title" : "Dropbox",
     "url" : "http://Dropbox.com",
     "userId" : "5177016b738218636f00000a"

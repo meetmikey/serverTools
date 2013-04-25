@@ -84,6 +84,8 @@ appInitUtils.initApp( 'deleteThreadAttDuplicates', initActions, conf, function()
             }
           });
 
+          console.log ('earliestDate', earliestDate)
+
           // get all dupes with the same earliest date...
           // we'll need to arbitrarily delete all but one
           var earliestSentDateIds = [];
