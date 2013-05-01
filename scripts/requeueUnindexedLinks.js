@@ -14,6 +14,7 @@ var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
 
+var limit = 1000;
 
 appInitUtils.initApp( 'requeueUnindexedLinks', initActions, conf, function() {
 
@@ -49,6 +50,7 @@ appInitUtils.initApp( 'requeueUnindexedLinks', initActions, conf, function() {
     console.log (query);
 
     LinkModel.find(query)
+      .limit (limit)
       .exec (function (err, foundLinks) {
         if (err) {
           winston.makeMongoError (err)
