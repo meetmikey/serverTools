@@ -44,6 +44,7 @@ appInitUtils.initApp( 'requeueUnindexedLinks', initActions, conf, function() {
       isPromoted : true, 
       isFollowed : true, 
       timestamp : {$gt : new Date (dateTime).toISOString()}, 
+      index : {$exists : true},
       $where : 'this.index.length === 0' 
     };
 
