@@ -51,14 +51,14 @@ appInitUtils.initApp( 'requeueUnindexedLinks', initActions, conf, function() {
     LinkModel.find(query)
       .exec (function (err, foundLinks) {
         if (err) {
-          cb (err);
+          winston.makeMongoError (err)
         } else {
           console.log ('about to requeue x links where x=', foundLinks.length);
 
           async.each (foundLinks, function (link, asyncCb) {
             indexingHandler.createIndexingJobForResourceMeta (link, true, asyncCb);
           }, function (err) {
-            cb (err)
+            winston.makeError (err)
           });
         }
       })
