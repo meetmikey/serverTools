@@ -249,6 +249,19 @@ mkdir keys
 #for workers server
 sudo apt-get install graphicsmagick
 
+#setup log rotation
+# add line to /etc/logrotate.conf
+/var/log/mikey/*/*.log {
+  daily
+  rotate 20
+  missingok
+  notifempty
+  sharedscripts
+  copytruncate
+  dateext
+  dateformat .%Y-%m-%d-%s
+}
+
 #Pick one...
 #/home/mikey/source/serverTools/build/buildAPIServer.sh
 #/home/mikey/source/serverTools/build/buildMailServer.sh
