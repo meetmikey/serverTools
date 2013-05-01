@@ -14,6 +14,7 @@ var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
 
+var limit = 1000;
 
 appInitUtils.initApp( 'requeueUnindexedLinks', initActions, conf, function() {
 
@@ -43,12 +44,14 @@ appInitUtils.initApp( 'requeueUnindexedLinks', initActions, conf, function() {
       isPromoted : true, 
       isFollowed : true, 
       timestamp : {$gt : new Date (dateTime).toISOString()}, 
+      index : {$exists : true},
       $where : 'this.index.length === 0' 
     };
 
     console.log (query);
 
     LinkModel.find(query)
+      .limit (limit)
       .exec (function (err, foundLinks) {
         if (err) {
           winston.makeMongoError (err)
@@ -58,7 +61,11 @@ appInitUtils.initApp( 'requeueUnindexedLinks', initActions, conf, function() {
           async.each (foundLinks, function (link, asyncCb) {
             indexingHandler.createIndexingJobForResourceMeta (link, true, asyncCb);
           }, function (err) {
-            winston.makeError (err)
+            if (err) {
+              cb (winston.makeError (err));
+            } else {
+              cb ();
+            }
           });
         }
       })
