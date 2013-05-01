@@ -58,7 +58,11 @@ appInitUtils.initApp( 'requeueUnindexedLinks', initActions, conf, function() {
           async.each (foundLinks, function (link, asyncCb) {
             indexingHandler.createIndexingJobForResourceMeta (link, true, asyncCb);
           }, function (err) {
-            cb (winston.makeError (err));
+            if (err) {
+              cb (winston.makeError (err));
+            } else {
+              cb ();
+            }
           });
         }
       })
