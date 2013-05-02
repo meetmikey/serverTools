@@ -41,7 +41,7 @@ appInitUtils.initApp( 'setIsFollowed', initActions, conf, function() {
 
 exports.doBatch = function (skip, callback) {
   winston.doInfo ('dobatch',  {skip : skip});
-  LinkInfoModel.find ({followType : {$ne : 'fail'}, followType : {$exists : true}})
+  LinkInfoModel.find ({followType : {$ne : 'fail', $exists : true}})
     .limit (limit)
     .select ('comparableURLHash')
     .sort ('comparableURLHash')
