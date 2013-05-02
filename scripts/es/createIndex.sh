@@ -1,4 +1,4 @@
-curl -XPUT 'http://localhost:9200/mail_v2/' -d '
+curl -XPUT 'http://localhost:9200/mail_v1/' -d '
 {
     "number_of_shards": 10,
     "number_of_replicas": 1,
@@ -17,7 +17,7 @@ curl -XPUT 'http://localhost:9200/mail_v2/' -d '
           "stopwords" : ["com", "org", "edu", "gov", "net", "http", "https", "http:", "https:", "www", "www.", "uk", "ca", "de"]
         },
         "default_analyzer" : {
-          "type" : "snowball", 
+          "type" : "snowball",
           "language" : "English"
         },
         "html_analyzer" : {

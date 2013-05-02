@@ -6,7 +6,7 @@ then
   echo -e "\n"
   ./createIndex.sh
   echo -e "\n"
-  ./createAlias.sh
+  #./createAlias.sh
   echo -e "\n"
   ./putMapping.sh
   echo -e "\n"
