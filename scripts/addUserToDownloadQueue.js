@@ -13,8 +13,7 @@ if ( ( ! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
 }
 
 var initActions = [
-    appInitUtils.CONNECT_ELASTIC_SEARCH
-  , appInitUtils.CONNECT_MONGO
+  appInitUtils.CONNECT_MONGO
 ];
 
 appInitUtils.initApp( 'addUserToDownloadQueue', initActions, conf, function() {
