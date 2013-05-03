@@ -41,7 +41,7 @@ appInitUtils.initApp( 'setIsFollowed', initActions, conf, function() {
 
 exports.doBatch = function (skip, callback) {
   winston.doInfo ('dobatch',  {skip : skip});
-  LinkInfoModel.find ({followType : {$ne : 'fail', $exists : true}})
+  LinkInfoModel.find ({followType : 'fail'})
     .limit (limit)
     .select ('comparableURLHash')
     .sort ('comparableURLHash')
@@ -57,7 +57,7 @@ exports.doBatch = function (skip, callback) {
         async.each (linkInfos, function (linkInfo, asyncCb) {
 
           LinkModel.update ({comparableURLHash : linkInfo.comparableURLHash},
-            {$set : {isFollowed : true}},
+            {$set : {isFollowed : false}},
             {multi : true},
             function (err, num) {
               if (err) {
