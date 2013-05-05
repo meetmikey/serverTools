@@ -7,7 +7,7 @@ curl -XPUT 'http://localhost:9200/mail_v1/' -d '
         "email" : {
           "type": "pattern",
           "lowercase" : "true",
-          "pattern":"[\\.@]",
+          "pattern":"[\\.@\\s+]",
           "stopwords" : ["com", "hotmail", "gmail", "outlook", "net", "org", "edu", "msn", "yahoo", "gov", "aol", "comcast", "spcglobal"]
         },
         "url" : {
