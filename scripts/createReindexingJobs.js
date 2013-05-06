@@ -130,8 +130,6 @@ exports.requeueAllLinksForUser = function (userId, cb) {
 }
 
 
-
-
 exports.jobAlreadyQueued = function (link) {
   var currentStateIndex = indexingHandler.getArrayIndexForVersion (link.index, esConnect.indexName);
   return currentStateIndex != -1;
