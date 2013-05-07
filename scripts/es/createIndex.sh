@@ -1,4 +1,4 @@
-curl -XPUT 'http://localhost:9200/mail_v2/' -d '
+curl -XPUT 'http://localhost:9200/mail_v3/' -d '
 {
     "number_of_shards": 10,
     "number_of_replicas": 1,
@@ -7,14 +7,12 @@ curl -XPUT 'http://localhost:9200/mail_v2/' -d '
         "email" : {
           "type": "pattern",
           "lowercase" : "true",
-          "pattern":"[\\.@\\s+]",
-          "stopwords" : ["com", "hotmail", "gmail", "outlook", "net", "org", "edu", "msn", "yahoo", "gov", "aol", "comcast", "spcglobal"]
+          "pattern":"[\\.@\\s+]"
         },
         "url" : {
           "type": "pattern",
           "lowercase" : "true",
-          "pattern":"[\\./\\-_?&\\=\\s+]",
-          "stopwords" : ["com", "org", "edu", "gov", "net", "http", "https", "http:", "https:", "www", "www.", "uk", "ca", "de"]
+          "pattern":"[\\./\\-_?&\\=\\s+]"
         },
         "default_analyzer" : {
           "type" : "snowball",

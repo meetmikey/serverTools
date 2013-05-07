@@ -1,1 +1,1 @@
-curl -XDELETE 'localhost:9200/mail_v2'
+curl -XDELETE 'localhost:9200/mail_v3'

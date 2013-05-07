@@ -1,11 +1,10 @@
 var serverCommon = process.env.SERVER_COMMON;
 
 var winston = require (serverCommon + '/lib/winstonWrapper').winston,
-    sqsConnect = require (serverCommon + '/lib/sqsConnect'),
-    cloudStorageUtils = require (serverCommon + '/lib/cloudStorageUtils'),
     appInitUtils = require (serverCommon + '/lib/appInitUtils'),
     indexingHandler = require (serverCommon + '/lib/indexingHandler'),
     conf = require (serverCommon + '/conf'),
+    esConnect = require (serverCommon + '/lib/esConnect'),
     async = require ('async'),
     mongoose = require (serverCommon + '/lib/mongooseConnect').mongoose;
 
@@ -13,8 +12,8 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
 var createReindexingJobs = this;
 
 var UserModel = mongoose.model ('User');
-var AttachmentModel = mongoose.model ('AttachmentModel');
-var LinkModel = mongoose.model ('LinkModel');
+var AttachmentModel = mongoose.model ('Attachment');
+var LinkModel = mongoose.model ('Link');
 
 var initActions = [
   appInitUtils.CONNECT_MONGO
@@ -28,7 +27,7 @@ appInitUtils.initApp( 'createReindexingJobs', initActions, conf, function() {
     } else if (foundUsers && foundUsers.length) {
 
       async.eachSeries (foundUsers, function (user, asyncCb) {
-        generateIndexingJobsForUser (user, asyncCb);
+        createReindexingJobs.requeueJobsForUser (user, asyncCb);
       }, function (err) {
         if (err) {
           winston.handleError (err);
@@ -53,7 +52,7 @@ exports.requeueJobsForUser = function (user, cb) {
     }
   ],
   // optional callback
-  function(err, results){
+  function(err){
     if (err) {
       cb (err);
     } else {
@@ -85,7 +84,7 @@ exports.requeueAllAttachmentsForUser = function (userId, cb) {
           indexingHandler.createIndexingJobForDocument ( attachment, false, true, function (err) {
             totalCallbacks++;
             if (err) {
-              winston.doError ('could not push job to queue for attachment', {err :err, attachmentId : attachment._id}));
+              winston.doError ('could not push job to queue for attachment', {err :err, attachmentId : attachment._id});
             } else if (len == totalCallbacks) {
               cb ();
             }
@@ -115,10 +114,10 @@ exports.requeueAllLinksForUser = function (userId, cb) {
             return;
           }
 
-          indexingHandler.createIndexingJobForDocument ( link, false, true, function (err) {
+          indexingHandler.createIndexingJobForDocument ( link, true, true, function (err) {
             totalCallbacks++;
             if (err) {
-              winston.doError ('could not push job to queue for link', {err :err, linkId : link._id}));
+              winston.doError ('could not push job to queue for link', {err :err, linkId : link._id});
             } else if (len == totalCallbacks) {
               cb ();
             }
