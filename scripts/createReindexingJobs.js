@@ -77,6 +77,7 @@ exports.requeueAllAttachmentsForUser = function (userId, cb) {
         foundAttachments.forEach (function (attachment) {
 
           if (createReindexingJobs.jobAlreadyQueued (attachment)) {
+            console.log ('job already queued');
             totalCallbacks++;
             return;
           }

@@ -1,1 +1,1 @@
-curl -XGET 'localhost:9200/mail_v3/_aliases?pretty'
+curl -XGET 'localhost:9200/_aliases?pretty'

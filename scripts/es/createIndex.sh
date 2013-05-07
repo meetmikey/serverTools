@@ -1,4 +1,4 @@
-curl -XPUT 'http://localhost:9200/mail_v3/' -d '
+curl -XPUT "http://localhost:9200/$1/" -d '
 {
     "number_of_shards": 10,
     "number_of_replicas": 1,

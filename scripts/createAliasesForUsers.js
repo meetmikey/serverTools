@@ -33,6 +33,11 @@ appInitUtils.initApp( 'createAliasesForUsers', initActions, conf, function() {
           }
           cb ();
         });
+      }, function (err) {
+        if (err) {
+          winston.handleError (err);
+        }
+        console.log ('all done');
       });
     }
   });
