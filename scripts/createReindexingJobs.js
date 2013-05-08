@@ -125,6 +125,8 @@ exports.requeueAllLinksForUser = function (userId, cb) {
           });
         });
 
+      } else {
+        cb ();
       }
     });
 }
