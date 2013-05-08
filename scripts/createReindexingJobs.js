@@ -79,17 +79,20 @@ exports.requeueAllAttachmentsForUser = function (userId, cb) {
           if (createReindexingJobs.jobAlreadyQueued (attachment)) {
             console.log ('job already queued');
             totalCallbacks++;
-            return;
+          }
+          else {
+
+            indexingHandler.createIndexingJobForDocument ( attachment, false, true, function (err) {
+              totalCallbacks++;
+              if (err) {
+                winston.doError ('could not push job to queue for attachment', {err :err, attachmentId : attachment._id});
+              } else if (len == totalCallbacks) {
+                cb ();
+              }
+            });
+
           }
 
-          indexingHandler.createIndexingJobForDocument ( attachment, false, true, function (err) {
-            totalCallbacks++;
-            if (err) {
-              winston.doError ('could not push job to queue for attachment', {err :err, attachmentId : attachment._id});
-            } else if (len == totalCallbacks) {
-              cb ();
-            }
-          });
         });
 
       }
@@ -112,19 +115,18 @@ exports.requeueAllLinksForUser = function (userId, cb) {
           
           if (createReindexingJobs.jobAlreadyQueued (link)) {
             totalCallbacks++;
-            return;
           }
-
-          indexingHandler.createIndexingJobForDocument ( link, true, true, function (err) {
-            totalCallbacks++;
-            if (err) {
-              winston.doError ('could not push job to queue for link', {err :err, linkId : link._id});
-            } else if (len == totalCallbacks) {
-              cb ();
-            }
-          });
+          else {
+            indexingHandler.createIndexingJobForDocument ( link, true, true, function (err) {
+              totalCallbacks++;
+              if (err) {
+                winston.doError ('could not push job to queue for link', {err :err, linkId : link._id});
+              } else if (len == totalCallbacks) {
+                cb ();
+              }
+            });
+          }
         });
-
       }
     });
 }
