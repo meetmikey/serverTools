@@ -1,7 +1,7 @@
 curl -XPUT "http://localhost:9200/$1/" -d '
 {
-    "number_of_shards": 10,
-    "number_of_replicas": 1,
+    "number_of_shards": 20,
+    "number_of_replicas": 0,
     "analysis": {
       "analyzer" : {
         "email" : {

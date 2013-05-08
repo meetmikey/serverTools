@@ -69,7 +69,7 @@ exports.requeueAllAttachmentsForUser = function (userId, cb) {
     .exec (function (err, foundAttachments) {
       if (err) {
         cb (winston.makeMongoError (err));
-      } else if (foundAttachments) {
+      } else if (foundAttachments && foundAttachments.length) {
         var len = foundAttachments.length;
         var totalCallbacks = 0;
         winston.doInfo ('About to create attachment reindexing jobs for user ', {userId : userId, numAttachments : len});
@@ -79,19 +79,21 @@ exports.requeueAllAttachmentsForUser = function (userId, cb) {
           if (createReindexingJobs.jobAlreadyQueued (attachment)) {
             console.log ('job already queued');
             totalCallbacks++;
-            return;
           }
+          else {
 
-          indexingHandler.createIndexingJobForDocument ( attachment, false, true, function (err) {
-            totalCallbacks++;
-            if (err) {
-              winston.doError ('could not push job to queue for attachment', {err :err, attachmentId : attachment._id});
-            } else if (len == totalCallbacks) {
-              cb ();
-            }
-          });
+            indexingHandler.createIndexingJobForDocument ( attachment, false, true, function (err) {
+              totalCallbacks++;
+              if (err) {
+                winston.doError ('could not push job to queue for attachment', {err :err, attachmentId : attachment._id});
+              } else if (len == totalCallbacks) {
+                cb ();
+              }
+            });
+          }
         });
-
+      } else {
+        cb ();
       }
     });
 }
@@ -103,7 +105,7 @@ exports.requeueAllLinksForUser = function (userId, cb) {
     .exec (function (err, foundLinks) {
       if (err) {
         cb (winston.makeMongoError (err));
-      } else if (foundLinks) {
+      } else if (foundLinks && foundLinks.length) {
         var len = foundLinks.length;
         var totalCallbacks = 0;
         winston.doInfo ('About to create link reindexing jobs for user ', {userId : userId, numLinks : len});
@@ -112,17 +114,17 @@ exports.requeueAllLinksForUser = function (userId, cb) {
           
           if (createReindexingJobs.jobAlreadyQueued (link)) {
             totalCallbacks++;
-            return;
           }
-
-          indexingHandler.createIndexingJobForDocument ( link, true, true, function (err) {
-            totalCallbacks++;
-            if (err) {
-              winston.doError ('could not push job to queue for link', {err :err, linkId : link._id});
-            } else if (len == totalCallbacks) {
-              cb ();
-            }
-          });
+          else {
+            indexingHandler.createIndexingJobForDocument ( link, true, true, function (err) {
+              totalCallbacks++;
+              if (err) {
+                winston.doError ('could not push job to queue for link', {err :err, linkId : link._id});
+              } else if (len == totalCallbacks) {
+                cb ();
+              }
+            });
+          }
         });
 
       } else {
