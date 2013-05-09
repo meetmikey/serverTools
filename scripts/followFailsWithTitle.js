@@ -9,7 +9,7 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
 var LinkInfoModel = mongoose.model ('LinkInfo');
 var LinkModel = mongoose.model ('Link');
 
-var setIsFollowed = this;
+var followFailsWithTitle = this;
 
 var initActions = [
   appInitUtils.CONNECT_MONGO
@@ -22,18 +22,18 @@ if (process.argv.length > 2) {
   console.log ('limit', limit);
 }
 
-appInitUtils.initApp( 'setIsFollowed', initActions, conf, function() {
+appInitUtils.initApp( 'followFailsWithTitle', initActions, conf, function() {
 
   function doBatchCallback (err, skip) {
     if (err) {
       console.log (err);
     } 
     else if (skip) {
-      setIsFollowed.doBatch (skip, doBatchCallback);
+      followFailsWithTitle.doBatch (skip, doBatchCallback);
     }
   }
 
-  setIsFollowed.doBatch (0, doBatchCallback);
+  followFailsWithTitle.doBatch (0, doBatchCallback);
 
 });
 
@@ -41,7 +41,7 @@ appInitUtils.initApp( 'setIsFollowed', initActions, conf, function() {
 
 exports.doBatch = function (skip, callback) {
   winston.doInfo ('dobatch',  {skip : skip});
-  LinkInfoModel.find ({followType : {$ne : 'fail', $exists : true}})
+  LinkInfoModel.find ({followType : 'fail', title : {$exists : true}})
     .limit (limit)
     .select ('comparableURLHash')
     .sort ('comparableURLHash')
@@ -55,13 +55,15 @@ exports.doBatch = function (skip, callback) {
         winston.doInfo ('setting is followed for ', {links : numLinkInfos});
 
         async.each (linkInfos, function (linkInfo, asyncCb) {
+          console.log (linkInfo.comparableURLHash);
 
           LinkModel.update ({comparableURLHash : linkInfo.comparableURLHash},
             {$set : {isFollowed : true}},
             {multi : true},
             function (err, num) {
               if (err) {
-                winston.doMongoError (err);
+                asyncCb (winston.makeMongoError (err));
+                return;
               }
               else if (num == 0) {
                 winston.doWarn ('zero link records updated isFollowed for hash', {comparableURLHash : linkInfo.comparableURLHash});
@@ -70,7 +72,16 @@ exports.doBatch = function (skip, callback) {
                 winston.doInfo ('records affected', {num : num});
               }
 
-              asyncCb ();
+              linkInfo.followType = 'diffbot';
+
+              linkInfo.save (function (err) {
+                if (err) {
+                  asyncCb (err);
+                } else {
+                  asyncCb ();
+                }
+              });
+            
             });
           }
           , function (err) {
