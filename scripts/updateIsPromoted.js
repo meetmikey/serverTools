@@ -172,7 +172,8 @@ appInitUtils.initApp( 'updateIsPromoted', initActions, conf, function() {
                     callback();
                   }
 
-                } else { //not promoted
+                } else { 
+                  //not promoted
                   if ( wasPromoted ) {
                     winston.doInfo('unpromoting link', {linkId: link._id, url: link.url, nonPromotableReason: link.nonPromotableReason});
                     indexingHandler.deleteResourceMetadata( link, true, callback );

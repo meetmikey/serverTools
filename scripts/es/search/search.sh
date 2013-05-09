@@ -1,54 +1,11 @@
-curl -XPOST localhost:9200/mail/resource/_search?pretty -d '{
-  "fields": ["file","title", "content-type"],
-  "query" : {
-    bool : {
-      must : [
-      ],
-      should : [
-        {
-          queryString: {
-            "fields": ["file", "title"],
-            "query": "sagar mehta"
-          }
-        },  
-        {
-          queryString: {
-            "fields": ["file", "title"],
-            "query": "hello",
-            "phrase_slop": 250,
-            "auto_generate_phrase_queries": true,
-            "boost": 2.0
-          }
-        },
-        {
-          queryString: {
-            "fields": ["file", "title"],
-            "query": "\"hello world\"",
-            "phrase_slop": 150,
-            "auto_generate_phrase_queries": false,
-            "boost": 3.0
-          }
-        },
-        {
-          "top_children" : {
-            "type": "resourceMeta",
-            "query": {
-              bool: {
-                should: [
-                  {
-                    queryString: {
-                      "query": "sagar mehta"
-                    }
-                  }
-                ]
-              }
-            },
-            "score" : "max",
-            "factor" : 5,
-            "incremental_factor" : 2
-          }
-        }
-      ]
+curl -XPOST localhost:9200/mail_v1/document/_search?pretty -d '{
+    "fields" : ["isLink", "date", "mailId", "filename", "authorName", "authorEmail", "emailBody", "emailSubject", "docType"],
+    size : 30,
+    query : {
+      multi_match : {
+        "query" : false,
+        "fields" : ["isLink"],
+        "operator" : "and"
+      }
     }
-  }
 }'
