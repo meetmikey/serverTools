@@ -188,8 +188,10 @@ chmod a+rw -R $MIKEY_LOG
 #su - mikey -c "/usr/local/mikey/mikeyAPI/stop.sh"
 #su - mikey -c "/usr/local/mikey/mikeyAPI/start.sh"
 
+
 #vi /etc/security/limits.conf
 #might have to restart or at least log out and log back in for these changes
+#NOTE: for elastic search machines, see the configuration above!!! (* soft nofile 64000)
 mikey soft nofile 32000
 mikey hard nofile 32000
 
