@@ -62,7 +62,7 @@ exports.requeueAttachments = function (version, cb) {
           }
           else {
 
-            indexingHandler.createIndexingJobForDocument ( attachment, false, true, function (err) {
+            indexingHandler.createIndexingJobForDocument ( attachment, false, false, function (err) {
               totalCallbacks++;
               if (err) {
                 winston.doError ('could not push job to queue for attachment', {err :err, attachmentId : attachment._id});
@@ -96,7 +96,7 @@ exports.requeueLinks = function (version, cb) {
             totalCallbacks++;
           }
           else {
-            indexingHandler.createIndexingJobForDocument ( link, true, true, function (err) {
+            indexingHandler.createIndexingJobForDocument ( link, true, false, function (err) {
               totalCallbacks++;
               if (err) {
                 winston.doError ('could not push job to queue for link', {err :err, linkId : link._id});
