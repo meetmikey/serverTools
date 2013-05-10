@@ -23,16 +23,11 @@ var version = 'v3';
 
 appInitUtils.initApp( 'createReindexingJobs', initActions, conf, function() {
 
-  UserModel.find ({}, function (err, foundUsers) {
-    if (err) {
-      winston.makeMongoError (err);
-    } else if (foundUsers && foundUsers.length) {
-
       async.waterfall ([
-        function (asyncCB) {
+        function (asyncCb) {
           createReindexingJobs.requeueAttachments (version, asyncCb);
         },
-        function (asyncCB) {
+        function (asyncCb) {
           createReindexingJobs.requeueLinks (version, asyncCb);
         },
         function (err) {
@@ -43,11 +38,12 @@ appInitUtils.initApp( 'createReindexingJobs', initActions, conf, function() {
           process.exit (1);
         }]);
 
+
 });
 
 
 //TODO : do we need to batch?
-exports.requeueAllAttachmentsForUser = function (version, cb) {
+exports.requeueAttachments = function (version, cb) {
   AttachmentModel.find ({'index.version' : {$ne : 'v3'}, isPromoted : true})
     .select ('_id userId mailId fileSize index hash')
     .exec (function (err, foundAttachments) {
@@ -83,7 +79,7 @@ exports.requeueAllAttachmentsForUser = function (version, cb) {
 }
 
 //TODO : do we need to batch?
-exports.requeueAllLinksForUser = function (version, cb) {
+exports.requeueLinks = function (version, cb) {
   LinkModel.find ({'index.version' : {$ne : 'v3'}, isPromoted : true, isFollowed : true})
     .select ('_id userId mailId comparableURLHash index')
     .exec (function (err, foundLinks) {
