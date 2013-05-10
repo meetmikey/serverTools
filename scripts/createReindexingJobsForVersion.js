@@ -19,52 +19,32 @@ var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
 
+var version = 'v3';
+
 appInitUtils.initApp( 'createReindexingJobs', initActions, conf, function() {
 
-  UserModel.find ({}, function (err, foundUsers) {
-    if (err) {
-      winston.makeMongoError (err);
-    } else if (foundUsers && foundUsers.length) {
+      async.waterfall ([
+        function (asyncCb) {
+          createReindexingJobs.requeueAttachments (version, asyncCb);
+        },
+        function (asyncCb) {
+          createReindexingJobs.requeueLinks (version, asyncCb);
+        },
+        function (err) {
+          if (err) {
+            winston.handleError (err);
+          }
+          console.log ('all done');
+          process.exit (1);
+        }]);
 
-      async.eachSeries (foundUsers, function (user, asyncCb) {
-        createReindexingJobs.requeueJobsForUser (user, asyncCb);
-      }, function (err) {
-        if (err) {
-          winston.handleError (err);
-        }
-        console.log ('all done for all users');
-      });
-    }
-  });
 
 });
 
 
-exports.requeueJobsForUser = function (user, cb) {
-  console.log ('user', user);
-
-  async.parallel([
-    function(asyncCb){
-      createReindexingJobs.requeueAllAttachmentsForUser (user._id, asyncCb);
-    },
-    function(asyncCb){
-      createReindexingJobs.requeueAllLinksForUser (user._id, asyncCb);
-    }
-  ],
-  // optional callback
-  function(err){
-    if (err) {
-      cb (err);
-    } else {
-      cb ();
-    }
-  });
-
-}
-
 //TODO : do we need to batch?
-exports.requeueAllAttachmentsForUser = function (userId, cb) {
-  AttachmentModel.find ({userId : userId, isPromoted : true})
+exports.requeueAttachments = function (version, cb) {
+  AttachmentModel.find ({'index.version' : {$ne : 'v3'}, isPromoted : true})
     .select ('_id userId mailId fileSize index hash')
     .exec (function (err, foundAttachments) {
       if (err) {
@@ -72,7 +52,7 @@ exports.requeueAllAttachmentsForUser = function (userId, cb) {
       } else if (foundAttachments && foundAttachments.length) {
         var len = foundAttachments.length;
         var totalCallbacks = 0;
-        winston.doInfo ('About to create attachment reindexing jobs for user ', {userId : userId, numAttachments : len});
+        winston.doInfo ('About to create attachment reindexing jobs ', {version : version, numAttachments : len});
 
         foundAttachments.forEach (function (attachment) {
 
@@ -82,7 +62,7 @@ exports.requeueAllAttachmentsForUser = function (userId, cb) {
           }
           else {
 
-            indexingHandler.createIndexingJobForDocument ( attachment, false, true, function (err) {
+            indexingHandler.createIndexingJobForDocument ( attachment, false, false, function (err) {
               totalCallbacks++;
               if (err) {
                 winston.doError ('could not push job to queue for attachment', {err :err, attachmentId : attachment._id});
@@ -99,8 +79,8 @@ exports.requeueAllAttachmentsForUser = function (userId, cb) {
 }
 
 //TODO : do we need to batch?
-exports.requeueAllLinksForUser = function (userId, cb) {
-  LinkModel.find ({userId : userId, isPromoted : true, isFollowed : true})
+exports.requeueLinks = function (version, cb) {
+  LinkModel.find ({'index.version' : {$ne : 'v3'}, isPromoted : true, isFollowed : true})
     .select ('_id userId mailId comparableURLHash index')
     .exec (function (err, foundLinks) {
       if (err) {
@@ -108,7 +88,7 @@ exports.requeueAllLinksForUser = function (userId, cb) {
       } else if (foundLinks && foundLinks.length) {
         var len = foundLinks.length;
         var totalCallbacks = 0;
-        winston.doInfo ('About to create link reindexing jobs for user ', {userId : userId, numLinks : len});
+        winston.doInfo ('About to create link reindexing jobs ', {version : version, numLinks : len});
 
         foundLinks.forEach (function (link) {
           
@@ -116,7 +96,7 @@ exports.requeueAllLinksForUser = function (userId, cb) {
             totalCallbacks++;
           }
           else {
-            indexingHandler.createIndexingJobForDocument ( link, true, true, function (err) {
+            indexingHandler.createIndexingJobForDocument ( link, true, false, function (err) {
               totalCallbacks++;
               if (err) {
                 winston.doError ('could not push job to queue for link', {err :err, linkId : link._id});
