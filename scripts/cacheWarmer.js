@@ -4,6 +4,7 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
     appInitUtils = require (serverCommon + '/lib/appInitUtils'),
     constants = require (serverCommon + '/constants'),
     async = require ('async'),
+    _ = require ('underscore'),
     conf = require (serverCommon + '/conf'),
     memcached = require (serverCommon + '/lib/memcachedConnect'),
     mongoose = require (serverCommon + '/lib/mongooseConnect').mongoose;
@@ -18,8 +19,8 @@ var initActions = [
   appInitUtils.CONNECT_MEMCACHED
 ];
 
-var batchSize = 1000;
-var maxItems = 100000;
+var batchSize = 5000;
+var maxItems = 1000000;
 
 if (process.argv.length > 2) {
   batchSize = parseInt (process.argv[2]);
@@ -55,6 +56,9 @@ exports.loadLinks = function (callback) {
 
       if (total < maxItems) {
         cacheWarmer.loadLinkModelBatch (lastUid, loadBatchCallback);
+      } else {
+        console.log ('over max items limit');
+        callback ();
       }
     }
     else {
@@ -82,6 +86,9 @@ exports.loadAttachments = function (callback) {
 
       if (total < maxItems) {
         cacheWarmer.loadAttachmentModelBatch (lastUid, loadBatchCallback);
+      } else {
+        console.log ('over max items limit');
+        callback ();
       }
     }
     else {
@@ -111,10 +118,12 @@ exports.loadLinkModelBatch = function (lastUid, callback) {
       callback (winston.makeMongoError (err));
     } else if (links && links.length) {
 
+      var linksToCache = _.filter(links, function(link) { return (link.isPromoted && link.isFollowed); });
+
       // get the last uid
       var lastUid = links[links.length-1]._id;
 
-      memcached.setBatch (links, function (err) {
+      memcached.setBatch (linksToCache, function (err) {
         if (err) {
           callback (winston.makeError ('error memcached set', {err : err}));
         } else {
@@ -145,6 +154,9 @@ exports.loadAttachmentModelBatch = function (lastUid, callback) {
     if (err) {
       callback (winston.makeMongoError (err));
     } else if (attachments && attachments.length) {
+
+      var attachmentsToCache = _.filter(attachments, function(link){ return (attachments.isPromoted) });
+
       // get the last uid
       var lastUid = attachments[attachments.length-1]._id;
 

@@ -5,6 +5,7 @@
   "dependencies": {
       "async": "=0.2.7"
     , "prompt": "=0.2.9"
+    , "underscore" : "=1.4.4"
   },
   "engines": {
     "node": "0.10.5"
