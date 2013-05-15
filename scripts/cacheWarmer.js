@@ -13,14 +13,15 @@ var cacheWarmer = this;
 
 var AttachmentModel = mongoose.model ('Attachment');
 var LinkModel = mongoose.model ('Link');
+var UserModel = mongoose.model ('User');
 
 var initActions = [
   appInitUtils.CONNECT_MONGO,
   appInitUtils.CONNECT_MEMCACHED
 ];
 
-var batchSize = 5000;
-var maxItems = 2000000;
+var batchSize = 1000;
+var maxItems = 10000;
 
 if (process.argv.length > 2) {
   batchSize = parseInt (process.argv[2]);
@@ -28,34 +29,56 @@ if (process.argv.length > 2) {
 }
 
 appInitUtils.initApp( 'cacheWarmer', initActions, conf, function() {
-  async.parallel ([
-    cacheWarmer.loadLinks,
-    cacheWarmer.loadAttachments
-  ], function (err) {
+
+  UserModel.find ({}, function (err, foundUsers) {
     if (err) {
-      winston.handleError (err);
+      winston.doMongoError (err);
     } else {
-      console.log ('all done');
+      async.eachSeries (foundUsers, function (foundUser, asyncCb) {
+
+        async.parallel ([
+          function (parallelCb) {
+            cacheWarmer.loadLinks (foundUser._id, parallelCb);
+          },
+          function (parallelCb) {
+            cacheWarmer.loadAttachments (foundUser._id, parallelCb);
+          }
+        ], function (err) {
+          if (err) {
+            winston.handleError (err);
+          } else {
+            console.log ('all done for user ' + foundUser._id);
+            asyncCb ();
+          }
+        });
+
+      }, function (err) {
+        if (err) {
+          winston.handleError (err)
+        } else {
+          console.log ('all done for all users');
+        }
+      });
     }
-  });
+  })
 
 });
 
 
-exports.loadLinks = function (callback) {
+exports.loadLinks = function (userId, callback) {
   winston.doInfo ('loadLinks');
   var total = 0;
 
-  function loadBatchCallback (err, lastUid) {
+  function loadBatchCallback (err, lastSent) {
     if (err) {
       callback (err);
     } 
-    else if (lastUid) {
+    else if (lastSent) {
       total += batchSize;
       winston.doInfo ('loadBatchCallback links', {total : total});
 
       if (total < maxItems) {
-        cacheWarmer.loadLinkModelBatch (lastUid, loadBatchCallback);
+        cacheWarmer.loadLinkModelBatchForUser (lastSent, userId, loadBatchCallback);
       } else {
         console.log ('over max items limit');
         callback ();
@@ -66,26 +89,26 @@ exports.loadLinks = function (callback) {
     }
   }
 
-  cacheWarmer.loadLinkModelBatch (null, loadBatchCallback);
+  cacheWarmer.loadLinkModelBatchForUser (null, userId, loadBatchCallback);
 
 }
 
-exports.loadAttachments = function (callback) {
+exports.loadAttachments = function (userId, callback) {
   winston.doInfo ('loadAttachments');
 
   var total = 0;
 
-  function loadBatchCallback (err, lastUid) {
+  function loadBatchCallback (err, lastSent) {
     if (err) {
       callback (err);
     } 
-    else if (lastUid) {
+    else if (lastSent) {
       winston.doInfo ('loadBatchCallback attachment', {total : total});
 
       total += batchSize;
 
       if (total < maxItems) {
-        cacheWarmer.loadAttachmentModelBatch (lastUid, loadBatchCallback);
+        cacheWarmer.loadAttachmentModelBatchForUser (lastSent, userId, loadBatchCallback);
       } else {
         console.log ('over max items limit');
         callback ();
@@ -96,23 +119,23 @@ exports.loadAttachments = function (callback) {
     }
   }
 
-  cacheWarmer.loadAttachmentModelBatch (null, loadBatchCallback);
+  cacheWarmer.loadAttachmentModelBatchForUser (null, userId, loadBatchCallback);
 
 }
 
-exports.loadLinkModelBatch = function (lastUid, callback) {
-  winston.doInfo ('loadLinkModelBatch', {lastUid : lastUid});
+exports.loadLinkModelBatchForUser = function (lastSent, userId, callback) {
+  winston.doInfo ('loadLinkModelBatch', {lastSent : lastSent});
 
-  var filter = {}
+  var filter = {userId : userId, isPromoted : true, isFollowed : true};
 
-  if (lastUid) {
-    filter['_id'] = {$gt : lastUid};
+  if (lastSent) {
+    filter['sentDate'] = {$lt : lastSent};
   }
 
   LinkModel.find (filter)
     .select (constants.DEFAULT_FIELDS_LINK)
     .limit (batchSize)
-    .sort ('_id')
+    .sort ('-sentDate')
     .exec (function (err, links) {
     if (err) {
       callback (winston.makeMongoError (err));
@@ -121,13 +144,14 @@ exports.loadLinkModelBatch = function (lastUid, callback) {
       var linksToCache = _.filter(links, function(link) { return (link.isPromoted && link.isFollowed); });
 
       // get the last uid
-      var lastUid = links[links.length-1]._id;
+      var lastSent = links[links.length-1].sentDate;
+      console.log ('lastSent', lastSent)
 
       memcached.setBatch (linksToCache, function (err) {
         if (err) {
           callback (winston.makeError ('error memcached set', {err : err}));
         } else {
-          callback (null, lastUid);
+          callback (null, lastSent);
         }
       });
     } else {
@@ -136,19 +160,19 @@ exports.loadLinkModelBatch = function (lastUid, callback) {
   });
 }
 
-exports.loadAttachmentModelBatch = function (lastUid, callback) {
-  winston.doInfo ('loadAttachmentModelBatch', {lastUid : lastUid});
-  var filter = {}
+exports.loadAttachmentModelBatchForUser = function (lastSent, userId, callback) {
+  winston.doInfo ('loadAttachmentModelBatch', {lastSent : lastSent});
+  var filter = {userId : userId, isPromoted : true};
 
-  if (lastUid) {
-    filter['_id'] = {$gt : lastUid};
+  if (lastSent) {
+    filter['sentDate'] = {$lt : lastSent};
   }
 
   var query = AttachmentModel.find (filter)
 
   query.select (constants.DEFAULT_FIELDS_Attachment)
     .limit (batchSize)
-    .sort ('_id')
+    .sort ('-sentDate')
 
   query.exec (function (err, attachments) {
     if (err) {
@@ -158,13 +182,14 @@ exports.loadAttachmentModelBatch = function (lastUid, callback) {
       var attachmentsToCache = _.filter(attachments, function(link){ return (attachments.isPromoted) });
 
       // get the last uid
-      var lastUid = attachments[attachments.length-1]._id;
+      var lastSent = attachments[attachments.length-1].sentDate;
+      console.log ('lastSent', lastSent)
 
       memcached.setBatch (attachments, function (err) {
         if (err) {
           callback (winston.makeError ('error memcached set', {err : err}));
         } else {
-          callback (null, lastUid);
+          callback (null, lastSent);
         }
       });
     } else {
