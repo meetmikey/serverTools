@@ -120,7 +120,7 @@ exports.checkExistsForBatch = function (lastUid, callback) {
           });
         }, function (err) {
           if (err) {
-            callback (winston.makeError ('error in batch', err));
+            callback (err);
           } else {
             callback (null, lastUid);
           }
