@@ -46,13 +46,13 @@ appInitUtils.initApp( 'updateAttachmentInfoS3State', initActions, conf, function
 exports.checkExistsForBatch = function (lastUid, callback) {
   var filter = {};
   if (lastUid) {
-    filter['_id'] = {$gt : lastUid};
+    filter['_id'] = {$lt : lastUid};
   }
 
   AttachmentInfoModel.find (filter)
     .select ('_id hash fileSize isUploaded')
     .limit (BATCH_SIZE)
-    .sort ('_id')
+    .sort ('-_id')
     .exec (function (err, attachmentInfos) {
       if (err) {
         callback (winston.makeMongoError (err));
