@@ -65,6 +65,12 @@ exports.checkExistsForBatch = function (lastUid, callback) {
         var lastUid = attachmentInfos[attachmentInfos.length-1]._id;
 
         async.each (attachmentInfos, function (attachmentInfo, asyncCb) {
+
+          if (attachmentInfo.isUploaded) {
+            asyncCb ();
+            return;
+          }
+
           s3Utils.checkFileExists (conf.aws.s3Folders.attachment + '/' + attachmentUtils.getFileContentId (attachmentInfo), function (err, exists) {
             if (err) {
               asyncCb (winston.makeMongoError (err));
