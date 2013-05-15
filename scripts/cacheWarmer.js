@@ -20,7 +20,7 @@ var initActions = [
 ];
 
 var batchSize = 5000;
-var maxItems = 1000000;
+var maxItems = 2000000;
 
 if (process.argv.length > 2) {
   batchSize = parseInt (process.argv[2]);
