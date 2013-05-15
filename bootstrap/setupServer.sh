@@ -20,7 +20,7 @@ service network restart
 
 yum update -y
 
-yum install -y gcc-c++ make openssl-devel git
+yum install -y gcc-c++ make openssl-devel git libssl libssl-dev
 
 mkdir -p /usr/local/source
 cd /usr/local/source
@@ -42,7 +42,7 @@ rm -f node-v0.10.5.tar.gz
 
 #scons (needed to build mongodb)
 wget http://sourceforge.net/projects/scons/files/scons/2.2.0/scons-2.2.0.tar.gz/download
-tar download
+tar -xvzf download
 cd scons-2.2.0
 python setup.py install
 cd ../
@@ -50,31 +50,13 @@ rm -f download
 
 #mongodb
 wget http://downloads.mongodb.org/src/mongodb-src-r2.2.3.tar.gz
-tar xvzf mongodb-src-r2.2.3.tar.gz
+tar -xvzf mongodb-src-r2.2.3.tar.gz
 cd mongodb-src-r2.2.3
 scons all
-scons --prefix=/opt/mongo install
+scons install -j 4 --64 --ssl --prefix=/opt/mongo
 cd ../
 rm -f mongodb-src-r2.2.3.tar.gz
 
-#elastic search
-wget http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.20.5.tar.gz
-tar xvzf elasticsearch-0.20.5.tar.gz
-cp -r elasticsearch-0.20.5 /usr/local/
-ln -s /usr/local/elasticsearch-0.20.5/ /usr/local/elasticsearch
-cp ../config/elasticsearch.yml /usr/local/elasticsearch/config/
-
-#elastic search service wrapper
-git clone https://github.com/elasticsearch/elasticsearch-servicewrapper.git
-cp -r elasticsearch-servicewrapper/service /usr/local/elasticsearch/bin/
-
-#elasticsearch increase number of open files
-* soft nofile 64000
-* hard nofile 64000
-
-#note: when starting ES for the first time, we need to run serverTools/scripts/es/bootstrap.sh
-
-sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.7.0
 
 #nagios instructions here:
 #http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
@@ -86,7 +68,7 @@ passwd nagios
 #RHEL
 yum install -y php
 #Ubuntu
-sudo apt-get install -y php5 libssl-dev
+sudo apt-get install -y php5
 cd /usr/local/source
 wget http://prdownloads.sourceforge.net/sourceforge/nagiosplug/nagios-plugins-1.4.16.tar.gz
 tar -xvzf nagios-plugins-1.4.16.tar.gz
@@ -176,7 +158,6 @@ chown -R mikey:mikey $MIKEY_LOG
 chmod a+rw -R $MIKEY_LOG
 
 #in /etc/rc.local, add some subset of...
-#/usr/local/elasticsearch/bin/service/elasticsearch start
 #sleep 5
 
 #su - mikey -c "/usr/local/mikey/mikeymail/stop.sh"
@@ -191,7 +172,7 @@ chmod a+rw -R $MIKEY_LOG
 
 #vi /etc/security/limits.conf
 #might have to restart or at least log out and log back in for these changes
-#NOTE: for elastic search machines, see the configuration above!!! (* soft nofile 64000)
+#NOTE: for elastic search machines, use the config in setupElasticSearch.sh!!! (* soft nofile 64000)
 mikey soft nofile 32000
 mikey hard nofile 32000
 
