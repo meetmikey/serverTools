@@ -207,10 +207,16 @@ su mikey
 #nagios instructions here:
 #http://nagios.sourceforge.net/docs/nagioscore/3/en/quickstart-fedora.html
 #put these things in /home/mikey/.bashrc
-#export NODE_ENV="production"
-#export MIKEY_SOURCE="/home/mikey/source"
-#export MIKEY_BUILD="/usr/local/mikey"
-#export SERVER_COMMON="$MIKEY_BUILD/serverCommon"
+export NODE_ENV="production"
+export MIKEY_SOURCE="/home/mikey/source"
+export MIKEY_BUILD="/usr/local/mikey"
+export SERVER_COMMON="$MIKEY_BUILD/serverCommon"
+
+#azure
+export CLOUD_ENV="azure"
+
+#aws
+export CLOUD_ENV="aws"
 
 
 cd /home/mikey
@@ -248,8 +254,25 @@ cd /usr/local/mikey
 mkdir keys
 #copy in meetmikey.key, meetmikey.com.crt, gd_cert1.crt, gd_cert2.crt
 
-#for workers server
+#GRAPHICSMAGICK
+
+#debian
 sudo apt-get install graphicsmagick
+
+#ec2
+#first install delegates - note most are available via yum, others just get the source and build individually
+# all are probably NOT necessary - just make sure you have support for tiff, xml, jpeg, png
+# always yum install the -devel version
+ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/delegates/
+
+#then install package
+wget ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/1.3/GraphicsMagick-1.3.18.tar.gz
+tar -xvzf GraphicsMagick-1.3.18.tar.gz
+cd GraphicsMagick-1.3.18.tar.gz
+./configure
+make
+sudo make install
+
 
 #setup log rotation
 # add line to /etc/logrotate.conf
