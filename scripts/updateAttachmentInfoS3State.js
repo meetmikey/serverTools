@@ -50,7 +50,7 @@ exports.checkExistsForBatch = function (lastUid, callback) {
   }
 
   AttachmentInfoModel.find (filter)
-    .select ('_id hash fileSize')
+    .select ('_id hash fileSize isUploaded')
     .limit (BATCH_SIZE)
     .sort ('_id')
     .exec (function (err, attachmentInfos) {
