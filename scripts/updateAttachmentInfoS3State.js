@@ -14,7 +14,7 @@ var updateAttachmentInfoS3State = this;
 var MailModel = mongoose.model ('Mail');
 var AttachmentInfoModel = mongoose.model ('AttachmentInfo');
 var AttachmentModel = mongoose.model ('Attachment');
-var BATCH_SIZE = 20;
+var BATCH_SIZE = 500;
 
 var initActions = [
   appInitUtils.CONNECT_MONGO
