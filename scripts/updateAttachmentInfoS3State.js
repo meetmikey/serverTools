@@ -73,8 +73,8 @@ exports.checkExistsForBatch = function (lastUid, callback) {
 
           s3Utils.checkFileExists (conf.aws.s3Folders.attachment + '/' + attachmentUtils.getFileContentId (attachmentInfo), function (err, exists) {
             if (err) {
-              asyncCb (winston.makeError ('error checkfile', err));
-            
+              winston.doWarn ('error checkfile', {err :err});
+              asyncCb ();
             } else if (exists) {
 
               attachmentInfo.isUploaded = true;
