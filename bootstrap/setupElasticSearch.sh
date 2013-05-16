@@ -28,4 +28,4 @@ yum install -y nginx
 #Ubuntu
 apt-get install -y nginx
 
-cp ./config/nginx/sites-available/default /etc/nginx/conf.d/virtual.conf
+cp ./config/nginx/virtual.conf /etc/nginx/conf.d/virtual.conf
