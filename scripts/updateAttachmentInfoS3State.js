@@ -14,7 +14,7 @@ var updateAttachmentInfoS3State = this;
 var MailModel = mongoose.model ('Mail');
 var AttachmentInfoModel = mongoose.model ('AttachmentInfo');
 var AttachmentModel = mongoose.model ('Attachment');
-var BATCH_SIZE = 500;
+var BATCH_SIZE = 300;
 
 var initActions = [
   appInitUtils.CONNECT_MONGO
@@ -38,7 +38,7 @@ appInitUtils.initApp( 'updateAttachmentInfoS3State', initActions, conf, function
     } 
   }
 
-  updateAttachmentInfoS3State.checkExistsForBatch (null, checkExistsForBatchCallback);
+  updateAttachmentInfoS3State.checkExistsForBatch ('51787359af46cc9b07029fea', checkExistsForBatchCallback);
 
 
 });
