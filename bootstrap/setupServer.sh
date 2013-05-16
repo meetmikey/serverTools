@@ -216,13 +216,13 @@ cd /home/mikey
 mkdir source
 cd source
 
-git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverTools.git
-git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/serverCommon.git
+git clone https://meetmikeygit:<password>@github.com/meetmikey/serverTools.git
+git clone https://meetmikeygit:<password>@github.com/meetmikey/serverCommon.git
 
 #pick the one(s) you need...
-git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeymail.git
-git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mailReader.git
-git clone https://meetmikeygit:delos%5pass@github.com/meetmikey/mikeyAPI.git
+git clone https://meetmikeygit:<password>@github.com/meetmikey/mikeymail.git
+git clone https://meetmikeygit:<password>@github.com/meetmikey/mailReader.git
+git clone https://meetmikeygit:<password>@github.com/meetmikey/mikeyAPI.git
 
 #Edit serverCommon/conf.js to add mongo credentials, etc.
 #Now commit this change so future pulls will merge
