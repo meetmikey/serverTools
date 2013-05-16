@@ -39,12 +39,10 @@ appInitUtils.initApp( 'queueFails', initActions, conf, function() {
           sqsConnect.addMessageToWorkerQueue (job, function (err) {
             if (err) 
               console.log (err)
+
+            console.log ('job', job);
           })
         }
-
-      //  if (https.globalAgent.sockets['sqs.us-east-1.amazonaws.com:443']) {
-      //    console.log ('socketLength', https.globalAgent.sockets['sqs.us-east-1.amazonaws.com:443'].length)
-      //  }
 
       });
     }
