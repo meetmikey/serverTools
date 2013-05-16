@@ -46,13 +46,13 @@ appInitUtils.initApp( 'updateAttachmentInfoS3State', initActions, conf, function
 exports.checkExistsForBatch = function (lastUid, callback) {
   var filter = {};
   if (lastUid) {
-    filter['_id'] = {$gt : lastUid};
+    filter['_id'] = {$lt : lastUid};
   }
 
   AttachmentInfoModel.find (filter)
     .select ('_id hash fileSize isUploaded')
     .limit (BATCH_SIZE)
-    .sort ('_id')
+    .sort ('-_id')
     .exec (function (err, attachmentInfos) {
       if (err) {
         callback (winston.makeMongoError (err));
@@ -73,8 +73,8 @@ exports.checkExistsForBatch = function (lastUid, callback) {
 
           s3Utils.checkFileExists (conf.aws.s3Folders.attachment + '/' + attachmentUtils.getFileContentId (attachmentInfo), function (err, exists) {
             if (err) {
-              asyncCb (winston.makeMongoError (err));
-            
+              winston.doWarn ('error checkfile', {err :err});
+              asyncCb ();
             } else if (exists) {
 
               attachmentInfo.isUploaded = true;
