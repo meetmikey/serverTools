@@ -62,11 +62,10 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
   var attachmentQuery = {
     isImage : true, 
-    isPromoted : true,
     attachmentThumbExists : {$ne : true}
   };
 
-  AttachmentModel.find (attachmentQuery,
+  AttachmentInfoModel.find (attachmentQuery,
     '_id hash fileSize',
     {limit : limit},
     function (err, attachments) {
