@@ -22,8 +22,8 @@ yum update -y
 
 yum install -y gcc-c++ make openssl-devel git libssl libssl-dev
 
-mkdir -p /usr/local/source
-cd /usr/local/source
+mkdir -p /usr/local/src
+cd /usr/local/src
 
 #node
 wget http://nodejs.org/dist/v0.10.5/node-v0.10.5.tar.gz
@@ -69,7 +69,7 @@ passwd nagios
 yum install -y php
 #Ubuntu
 sudo apt-get install -y php5
-cd /usr/local/source
+cd /usr/local/src
 wget http://prdownloads.sourceforge.net/sourceforge/nagiosplug/nagios-plugins-1.4.16.tar.gz
 tar -xvzf nagios-plugins-1.4.16.tar.gz
 rm -f nagios-plugins-1.4.16.tar.gz
@@ -83,7 +83,7 @@ make install
 yum install -y xinetd
 #Ubuntu
 sudo apt-get install -y xinetd
-cd /usr/local/source
+cd /usr/local/src
 wget http://prdownloads.sourceforge.net/sourceforge/nagios/nrpe-2.14.tar.gz
 tar xvzf nrpe-2.14.tar.gz
 rm -f nrpe-2.14.tar.gz
