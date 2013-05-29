@@ -20,7 +20,7 @@ var batchSize = 10;
 
 if (process.argv.length > 2) {
   batchSize = parseInt (process.argv[2]);
-  console.log ('limit', batchSize);
+  winston.doInfo('batchSize limit', {batchSize: batchSize});
 }
 
 var alreadyProcessed = {};
@@ -60,7 +60,7 @@ appInitUtils.initApp( 'createAttachmentInfo', initActions, conf, function() {
 
               attachmentInfo.save (function (err) {
                 count+=1;
-                console.log ('saved attachmentInfo', count)
+                winston.doInfo('saved attachmentInfo', {count: count});
                 if (err) {
                   winston.doMongoError (err);
                 }
@@ -84,7 +84,7 @@ appInitUtils.initApp( 'createAttachmentInfo', initActions, conf, function() {
     } else if (newIndex) {
       processBatch (newIndex, processBatchCallback);
     } else {
-      console.log ('all done');
+      winston.doInfo('all done');
     }
   }
 

@@ -34,7 +34,7 @@ appInitUtils.initApp( 'createReindexingJobs', initActions, conf, function() {
           if (err) {
             winston.handleError (err);
           }
-          console.log ('all done');
+          winston.doInfo('all done');
           process.exit (1);
         }]);
 
@@ -57,7 +57,7 @@ exports.requeueAttachments = function (version, cb) {
         foundAttachments.forEach (function (attachment) {
 
           if (createReindexingJobs.jobAlreadyQueued (attachment)) {
-            console.log ('job already queued');
+            winston.doInfo('job already queued');
             totalCallbacks++;
           }
           else {

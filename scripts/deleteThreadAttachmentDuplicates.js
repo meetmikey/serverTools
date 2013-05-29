@@ -30,7 +30,7 @@ appInitUtils.initApp( 'deleteThreadAttDuplicates', initActions, conf, function()
       if (err) {
         winston.handleError (err);
       } else {
-        console.log ('all done for all users');
+        winston.doInfo('all done for all users');
       }
     });
   });
@@ -84,7 +84,7 @@ appInitUtils.initApp( 'deleteThreadAttDuplicates', initActions, conf, function()
             }
           });
 
-          console.log ('earliestDate', earliestDate)
+          winston.doInfo('earliestDate', {earliestDate: earliestDate});
 
           // get all dupes with the same earliest date...
           // we'll need to arbitrarily delete all but one

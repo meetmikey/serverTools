@@ -25,7 +25,7 @@ appInitUtils.initApp( 'createDuplicateAttachmentAndLinks', initActions, conf, fu
 
   user.save (function (err) {
     if (err) {
-      console.error (err);
+      winston.doError('error', {err: err});
     }
   });
 
@@ -123,19 +123,19 @@ appInitUtils.initApp( 'createDuplicateAttachmentAndLinks', initActions, conf, fu
 
   att1.save (function (err) {
     if (err) {
-      console.error (err);
+      winston.doError('error', {err: err});
     }
   })
 
   att2.save (function (err) {
     if (err) {
-      console.error (err);
+      winston.doError('error', {err: err});
     }
   })
 
   att3.save (function (err) {
     if (err) {
-      console.error (err);
+      winston.doError('error', {err: err});
     }
   })
 
@@ -228,19 +228,19 @@ appInitUtils.initApp( 'createDuplicateAttachmentAndLinks', initActions, conf, fu
 
   link1.save (function (err) {
     if (err) {
-      console.error (err);
+      winston.doError('error', {err: err});
     }
   });
 
   link2.save (function (err) {
     if (err) {
-      console.error (err);
+      winston.doError('error', {err: err});
     }
   });
 
   link3.save (function (err) {
     if (err) {
-      console.error (err);
+      winston.doError('error', {err: err});
     }
   });
 

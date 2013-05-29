@@ -20,7 +20,7 @@ var limit = 100;
 
 if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
-  console.log ('limit', limit);
+  winston.doInfo('limit', {limit: limit});
 }
 
 appInitUtils.initApp( 'expungeDrafts', initActions, conf, function() {
@@ -38,10 +38,8 @@ appInitUtils.initApp( 'expungeDrafts', initActions, conf, function() {
 
       foundMails.forEach (function (mail) {
 
-        console.log (mail);
-
         LinkModel.count ({mailId : mail._id}, function (err, count) {
-          console.log ('links from draft' + mail._id, count);
+          winston.doInfo('links from draft', {mailId: mail._id, count: count});
         });
 
 

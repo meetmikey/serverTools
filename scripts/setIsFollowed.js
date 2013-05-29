@@ -19,14 +19,14 @@ var limit = 50;
 
 if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
-  console.log ('limit', limit);
+  winston.doInfo('limit', {limit: limit});
 }
 
 appInitUtils.initApp( 'setIsFollowed', initActions, conf, function() {
 
   function doBatchCallback (err, skip) {
     if (err) {
-      console.log (err);
+      winston.doError('error', {err: err});
     } 
     else if (skip) {
       setIsFollowed.doBatch (skip, doBatchCallback);

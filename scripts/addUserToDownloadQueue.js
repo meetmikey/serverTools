@@ -25,9 +25,8 @@ appInitUtils.initApp( 'addUserToDownloadQueue', initActions, conf, function() {
       var userEmail = process.argv[2];
 
       prompt.start();
-      var message = 'This will add this user to the download queue.  Are you SURE?';
-      console.log();
-      console.log( message );
+      var message = '\nThis will add this user to the download queue.  Are you SURE?';
+      winston.consoleLog( message );
 
       var addUserPrompt = 'add this user to the download queue? (y/n)'
       prompt.get([addUserPrompt], function (err, result) {
@@ -35,7 +34,7 @@ appInitUtils.initApp( 'addUserToDownloadQueue', initActions, conf, function() {
           callback( winston.makeError('prompt error', {promptError: err}) );
 
         } else if ( ( ! result ) || ( ! result[addUserPrompt] ) || ( result[addUserPrompt] !== 'y' ) ) {
-          console.log('Aborted!');
+          winston.doInfo('Aborted!');
           callback();
 
         } else {

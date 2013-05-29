@@ -32,7 +32,7 @@ appInitUtils.initApp( 'createReindexingJobs', initActions, conf, function() {
         if (err) {
           winston.handleError (err);
         }
-        console.log ('all done for all users');
+        winston.doInfo('all done for all users');
       });
     }
   });
@@ -41,7 +41,7 @@ appInitUtils.initApp( 'createReindexingJobs', initActions, conf, function() {
 
 
 exports.requeueJobsForUser = function (user, cb) {
-  console.log ('user', user);
+  winston.doInfo('user', {user: user});
 
   async.parallel([
     function(asyncCb){
@@ -77,7 +77,7 @@ exports.requeueAllAttachmentsForUser = function (userId, cb) {
         foundAttachments.forEach (function (attachment) {
 
           if (createReindexingJobs.jobAlreadyQueued (attachment)) {
-            console.log ('job already queued');
+            winston.doInfo('job already queued');
             totalCallbacks++;
           }
           else {

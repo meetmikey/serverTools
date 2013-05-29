@@ -25,7 +25,7 @@ var maxItems = 10000;
 
 if (process.argv.length > 2) {
   batchSize = parseInt (process.argv[2]);
-  console.log ('limit', batchSize);
+  winston.doInfo('batchSize limit', {batchSize: batchSize});
 }
 
 appInitUtils.initApp( 'cacheWarmer', initActions, conf, function() {
@@ -47,7 +47,7 @@ appInitUtils.initApp( 'cacheWarmer', initActions, conf, function() {
           if (err) {
             winston.handleError (err);
           } else {
-            console.log ('all done for user ' + foundUser._id);
+            winston.doInfo('all done for user ' + {foundUserId: foundUser._id});
             asyncCb ();
           }
         });
@@ -56,7 +56,7 @@ appInitUtils.initApp( 'cacheWarmer', initActions, conf, function() {
         if (err) {
           winston.handleError (err)
         } else {
-          console.log ('all done for all users');
+          winston.doInfo('all done for all users');
         }
       });
     }
@@ -80,7 +80,7 @@ exports.loadLinks = function (userId, callback) {
       if (total < maxItems) {
         cacheWarmer.loadLinkModelBatchForUser (lastSent, userId, loadBatchCallback);
       } else {
-        console.log ('over max items limit');
+        winston.doInfo('over max items limit');
         callback ();
       }
     }
@@ -110,7 +110,7 @@ exports.loadAttachments = function (userId, callback) {
       if (total < maxItems) {
         cacheWarmer.loadAttachmentModelBatchForUser (lastSent, userId, loadBatchCallback);
       } else {
-        console.log ('over max items limit');
+        winston.doInfo('over max items limit');
         callback ();
       }
     }
@@ -145,7 +145,7 @@ exports.loadLinkModelBatchForUser = function (lastSent, userId, callback) {
 
       // get the last uid
       var lastSent = links[links.length-1].sentDate;
-      console.log ('lastSent', lastSent)
+      winston.doInfo('lastSent', {lastSent: lastSent});
 
       memcached.setBatch (linksToCache, function (err) {
         if (err) {
@@ -183,7 +183,7 @@ exports.loadAttachmentModelBatchForUser = function (lastSent, userId, callback) 
 
       // get the last uid
       var lastSent = attachments[attachments.length-1].sentDate;
-      console.log ('lastSent', lastSent)
+      winston.doInfo('lastSent', {lastSent: lastSent});
 
       memcached.setBatch (attachments, function (err) {
         if (err) {

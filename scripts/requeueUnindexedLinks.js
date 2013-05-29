@@ -28,7 +28,7 @@ appInitUtils.initApp( 'requeueUnindexedLinks', initActions, conf, function() {
       if (err) {
         winston.handleError (err);
       } else {
-        console.log ('all done for all users');
+        winston.doInfo('all done for all users');
       }
     });
   });
@@ -46,14 +46,14 @@ appInitUtils.initApp( 'requeueUnindexedLinks', initActions, conf, function() {
       $where : 'this.index.length === 0' 
     };
 
-    console.log (query);
+    winston.doInfo('query', {query: query});
 
     LinkModel.find(query)
       .exec (function (err, foundLinks) {
         if (err) {
           winston.makeMongoError (err)
         } else {
-          console.log ('about to requeue x links where x=', foundLinks.length);
+          winston.doInfo('about to requeue x links where x=', {foundLinksLength: foundLinks.length});
 
           async.each (foundLinks, function (link, asyncCb) {
             indexingHandler.createIndexingJobForResourceMeta (link, true, asyncCb);

@@ -20,19 +20,19 @@ var limit = 50;
 
 if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
-  console.log ('limit', limit);
+  winston.doInfo('limit', {limit: limit});
 }
 
 appInitUtils.initApp( 'retryFollows', initActions, conf, function() {
 
   function doBatchCallback (err, skip) {
     if (err) {
-      console.log (err);
+      winston.doError('error', {err: err});
     } 
     else if (skip) {
       retryFollows.doBatch (skip, doBatchCallback);
     } else {
-      console.log ('all done');
+      winston.doInfo('all done');
     }
   }
 

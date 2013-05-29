@@ -20,7 +20,7 @@ var limit = 50;
 
 if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
-  console.log ('limit', limit);
+  winston.doInfo('limit', {limit: limit});
 }
 
 appInitUtils.initApp('ampLinksCleanup', initActions, conf, function() {
@@ -56,8 +56,6 @@ exports.doBatch = function (skip, callback) {
         winston.doInfo ('fixing links and linkinfos ', {links : numLinkInfos});
 
         async.eachSeries (linkInfos, function (linkInfo, asyncCb) {
-
-          console.log (linkInfo);
 
           // clean the linkInfo url
           linkInfo.rawURL = urlUtils.cleanURL (linkInfo.rawURL);

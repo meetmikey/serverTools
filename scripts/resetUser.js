@@ -27,9 +27,8 @@ appInitUtils.initApp( 'resetUser', initActions, conf, function() {
       var userEmail = process.argv[2];
 
       prompt.start();
-      var message = 'This will reset ALL data for this user.  Are you SURE?';
-      console.log();
-      console.log( message );
+      var message = '\nThis will reset ALL data for this user.  Are you SURE?';
+      winston.consoleLog( message );
 
       var resetPrompt = 'reset this user? (y/n)'
       prompt.get([resetPrompt], function (err, result) {
@@ -37,7 +36,7 @@ appInitUtils.initApp( 'resetUser', initActions, conf, function() {
           callback( winston.makeError('prompt error', {promptError: err}) );
 
         } else if ( ( ! result ) || ( ! result[resetPrompt] ) || ( result[resetPrompt] !== 'y' ) ) {
-          console.log('Aborted!');
+          winston.doInfo('Aborted!');
           callback();
 
         } else {

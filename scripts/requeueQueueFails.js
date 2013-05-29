@@ -16,7 +16,7 @@ var limit = 100;
 
 if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
-  console.log ('limit', limit);
+  winston.doInfo('limit', {limit: limit});
 }
 
 appInitUtils.initApp( 'queueFails', initActions, conf, function() {
@@ -37,10 +37,10 @@ appInitUtils.initApp( 'queueFails', initActions, conf, function() {
 
         if (queue == 'Worker' || queue == 'WorkerReindex') {
           sqsConnect.addMessageToWorkerQueue (job, function (err) {
-            if (err) 
-              console.log (err)
-
-            console.log ('job', job);
+            if (err) {
+              winston.handleError(err);
+            }
+            winston.doInfo('job', {job: job});
           })
         }
 

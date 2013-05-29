@@ -19,14 +19,14 @@ var limit = 50;
 
 if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
-  console.log ('limit', limit);
+  winston.doInfo('limit', {limit: limit});
 }
 
 appInitUtils.initApp( 'followFailsWithTitle', initActions, conf, function() {
 
   function doBatchCallback (err, skip) {
     if (err) {
-      console.log (err);
+      winston.doError('error', {err: err});
     } 
     else if (skip) {
       followFailsWithTitle.doBatch (skip, doBatchCallback);
@@ -55,7 +55,7 @@ exports.doBatch = function (skip, callback) {
         winston.doInfo ('setting is followed for ', {links : numLinkInfos});
 
         async.each (linkInfos, function (linkInfo, asyncCb) {
-          console.log (linkInfo.comparableURLHash);
+          winston.doInfo('comparableURLHash', {comparableURLHash: linkInfo.comparableURLHash});
 
           LinkModel.update ({comparableURLHash : linkInfo.comparableURLHash},
             {$set : {isFollowed : true}},

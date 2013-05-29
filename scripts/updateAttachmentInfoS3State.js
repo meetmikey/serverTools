@@ -28,13 +28,13 @@ appInitUtils.initApp( 'updateAttachmentInfoS3State', initActions, conf, function
       winston.handleError (err);
     } 
     else if (lastUid) {
-      console.log ('done with batch', sum += BATCH_SIZE);
-      console.log ('lastUid', lastUid);
+      sum += BATCH_SIZE;
+      winston.doInfo('done with batch', {lastUid: lastUid});
 
       updateAttachmentInfoS3State.checkExistsForBatch (lastUid, checkExistsForBatchCallback);
     }
     else {
-      console.log ('all done');
+      winston.doInfo('all done');
     } 
   }
 

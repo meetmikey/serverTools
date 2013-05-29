@@ -27,7 +27,7 @@ appInitUtils.initApp( 'createAliasesForUsers', initActions, conf, function() {
 
       async.eachSeries (foundUsers, function (user, cb) {
         esUtils.createAliasForUser (user._id, function (err) {
-          console.log ('creating alias for user', user);
+          winston.doInfo('creating alias for user', {user: user});
           if (err) {
             winston.handleError (err);
           }
@@ -37,7 +37,7 @@ appInitUtils.initApp( 'createAliasesForUsers', initActions, conf, function() {
         if (err) {
           winston.handleError (err);
         }
-        console.log ('all done');
+        winston.doInfo('all done');
       });
     }
   });

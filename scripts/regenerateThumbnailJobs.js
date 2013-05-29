@@ -21,7 +21,7 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
   if (process.argv.length > 2) {
     limit = parseInt (process.argv[2]);
-    console.log ('limit', limit);
+    winston.doInfo('limit', {limit: limit});
   }
 
   // TODO : add some indexes
@@ -99,7 +99,7 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
         done [attachment.hash] = 1;
 
         pushCount+=1;
-        console.log (pushCount);
+        winston.doInfo('pushCount', {pushCount: pushCount});
       }
 
     });

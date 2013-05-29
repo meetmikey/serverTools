@@ -22,7 +22,7 @@ var limit = 50;
 
 if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
-  console.log ('limit', limit);
+  winston.doInfo('limit', {limit: limit});
 }
 
 
@@ -46,14 +46,12 @@ appInitUtils.initApp( 'findThreadAttDuplicates', initActions, conf, function() {
 
             AttachmentModel.count ({userId : foundUser._id, gmThreadId : gmThreadId, hash : hash}, function (err, count) {
               if (count > 1 && !(gmThreadId + "_"  + hash in reported)) {
-                console.log ("count", count);
-                console.log ("thread", gmThreadId);
-                console.log ("hash", hash);
+                winston.doInfo('info', {count: count, thread: gmThreadId, hash: hash});
                 reported [gmThreadId + "_" + hash] = 1;
                 dupes+=1
                 total +=1
               } else {
-                console.log (count)
+                winston.doInfo('count', {count: count});
                 total +=1
               }
             });
@@ -66,7 +64,8 @@ appInitUtils.initApp( 'findThreadAttDuplicates', initActions, conf, function() {
   });
 
 setInterval (function () {
-  console.log (dupes/total)
+  var fraction = dupes/total;
+  winston.doInfo('fraction', {fraction: fraction});
 }, 5000)
 
 });

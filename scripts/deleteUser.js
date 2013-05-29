@@ -30,13 +30,12 @@ appInitUtils.initApp( 'deletUser', initActions, conf, function() {
       }
 
       prompt.start();
-      var message = 'This will delete EVERYTHING about this user';
+      var message = '\nThis will delete EVERYTHING about this user';
       if ( deleteUserObject ) {
         message += ', including the user itself';
       }
       message += '.  Are you SURE?';
-      console.log();
-      console.log( message );
+      winston.consoleLog( message );
 
       var deletePrompt = 'delete this user? (y/n)'
       prompt.get([deletePrompt], function (err, result) {
@@ -44,7 +43,7 @@ appInitUtils.initApp( 'deletUser', initActions, conf, function() {
           callback( winston.makeError('prompt error', {promptError: err}) );
 
         } else if ( ( ! result ) || ( ! result[deletePrompt] ) || ( result[deletePrompt] !== 'y' ) ) {
-          console.log('Aborted!');
+          winston.doInfo('Aborted!');
           callback();
 
         } else {

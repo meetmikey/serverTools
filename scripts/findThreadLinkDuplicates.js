@@ -20,7 +20,7 @@ var limit = 100;
 
 if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
-  console.log ('limit', limit);
+  winston.doInfo('limit', {limit: limit});
 }
 
 appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() {
@@ -43,14 +43,12 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
 
             LinkModel.count ({userId : foundUser._id, gmThreadId : gmThreadId, comparableURLHash : comparableURLHash}, function (err, count) {
               if (count > 1 && !(gmThreadId + "_"  + comparableURLHash in reported)) {
-                console.log ("count", count);
-                console.log ("thread", gmThreadId);
-                console.log ("comparableURLHash", comparableURLHash);
+                winston.doInfo('info', {count: count, thread: gmThreadId, comparableURLHash: comparableURLHash});
                 reported [gmThreadId + "_" + comparableURLHash] = 1;
                 dupes+=1
                 total +=1
               } else {
-                console.log (count)
+                winston.doInfo('count', {count: count});
                 total +=1
               }
             });
@@ -63,7 +61,8 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
   });
 
 setInterval (function () {
-  console.log (dupes/total)
+  var fraction = dupes/total;
+  winston.doInfo('fraction', {fraction: fraction});
 }, 5000)
 
 });

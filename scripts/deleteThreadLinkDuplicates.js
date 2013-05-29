@@ -31,7 +31,7 @@ appInitUtils.initApp( 'findThreadLinkDuplicates', initActions, conf, function() 
       if (err) {
         winston.handleError (err);
       } else {
-        console.log ('all done for all users');
+        winston.doInfo('all done for all users');
       }
     });
   });
