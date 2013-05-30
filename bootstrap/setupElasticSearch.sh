@@ -21,11 +21,28 @@ cp -r elasticsearch-servicewrapper/service /usr/local/elasticsearch/bin/
 
 sudo /usr/local/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.7.0
 
-
 #nginx proxy
+#first, install with yum to get the nice service wrapper
 #RHEL
 yum install -y nginx
 #Ubuntu
 apt-get install -y nginx
 
+#now, to get the latest version, build from source and copy it over top (there's probably a better way to do this)
+yum install -y pcre-devel
+cd /usr/local/src
+wget http://nginx.org/download/nginx-1.4.1.tar.gz
+tar -xvzf nginx-1.4.1.tar.gz
+rm -f nginx-1.4.1.tar.gz
+cd nginx-1.4.1
+./configure --with-http_ssl_module
+make
+make install
+service nginx stop
+cp /usr/local/nginx/sbin/nginx /usr/sbin/nginx
+
 cp ./config/nginx/virtual.conf /etc/nginx/conf.d/virtual.conf
+
+chkconfig --level 345 nginx on
+
+service nginx start
