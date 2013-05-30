@@ -1,6 +1,8 @@
 REPOSITORIES=( serverTools serverCommon mikeyAPI )
 PROGRAMS=( mikeyAPI )
 
+FLAG_FILE=/usr/local/mikey/mikeyAPI/views/index.html
+rm -f $FLAG_FILE
 
 for i in "${REPOSITORIES[@]}"
 do
