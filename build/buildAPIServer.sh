@@ -1,8 +1,8 @@
 REPOSITORIES=( serverTools serverCommon mikeyAPI )
 PROGRAMS=( mikeyAPI )
 
-FLAG_FILE=/usr/local/mikey/mikeyAPI/views/index.html
-rm -f $FLAG_FILE
+#note: it would be good to pull the API server out of rotation during this process.
+#just removing the index.html file doesn't work, though.
 
 for i in "${REPOSITORIES[@]}"
 do
