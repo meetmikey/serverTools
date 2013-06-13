@@ -126,7 +126,7 @@ exports.loadAttachments = function (userId, callback) {
 exports.loadLinkModelBatchForUser = function (lastSent, userId, callback) {
   winston.doInfo ('loadLinkModelBatch', {lastSent : lastSent});
 
-  var filter = {userId : userId, isPromoted : true, isFollowed : true};
+  var filter = {userId : userId, isPromoted : true, isFollowed : true, isDeleted: false};
 
   if (lastSent) {
     filter['sentDate'] = {$lt : lastSent};
