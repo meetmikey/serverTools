@@ -100,7 +100,7 @@ exports.requeueAllAttachmentsForUser = function (userId, cb) {
 
 //TODO : do we need to batch?
 exports.requeueAllLinksForUser = function (userId, cb) {
-  LinkModel.find ({userId : userId, isPromoted : true, isFollowed : true})
+  LinkModel.find ({userId : userId, isPromoted : true, isFollowed : true, isDeleted: false})
     .select ('_id userId mailId comparableURLHash index')
     .exec (function (err, foundLinks) {
       if (err) {
