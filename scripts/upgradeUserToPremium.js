@@ -1,6 +1,7 @@
 var serverCommon = process.env.SERVER_COMMON;
 
 var conf = require(serverCommon + '/conf')
+  , deleteUserUtils = require('../lib/deleteUserUtils')
   , userQueueUtils = require('../lib/userQueueUtils')
   , appInitUtils = require(serverCommon + '/lib/appInitUtils')
   , winston = require(serverCommon + '/lib/winstonWrapper').winston
@@ -8,37 +9,39 @@ var conf = require(serverCommon + '/conf')
   , prompt = require('prompt')
 
 if ( ( ! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
-  winston.doWarn('Missing params: usage: node addUserToResumeDownload.js <email>');
+  winston.doWarn('Missing params: usage: node resetUser.js <email>');
   process.exit(1);
 }
 
 var initActions = [
-  appInitUtils.CONNECT_MONGO
+    appInitUtils.CONNECT_ELASTIC_SEARCH
+  , appInitUtils.CONNECT_MONGO
 ];
 
-appInitUtils.initApp( 'addUserToResumeDownload', initActions, conf, function() {
+appInitUtils.initApp( 'upgradeUser', initActions, conf, function() {
 
-  var addUserToResumeDownload = {
+  var upgradeUser = {
     
     run: function( callback ) {
 
       var userEmail = process.argv[2];
 
       prompt.start();
-      var message = '\nThis will add this user to the resume download table for right now.  Are you SURE?';
-      winston.consoleLog( message );
+      var message = 'This will upgrade the user: ' + userEmail + ' to premium.';
+      console.log();
+      console.log( message );
 
-      var addUserPrompt = 'add this user to the resume table? (y/n)'
-      prompt.get([addUserPrompt], function (err, result) {
+      var resetPrompt = 'upgrade this user? (y/n)'
+      prompt.get([resetPrompt], function (err, result) {
         if ( err ) {
           callback( winston.makeError('prompt error', {promptError: err}) );
 
-        } else if ( ( ! result ) || ( ! result[addUserPrompt] ) || ( result[addUserPrompt] !== 'y' ) ) {
-          winston.doInfo('Aborted!');
+        } else if ( ( ! result ) || ( ! result[resetPrompt] ) || ( result[resetPrompt] !== 'y' ) ) {
+          console.log('Aborted!');
           callback();
 
         } else {
-          userQueueUtils.findAndAddUserToResumeTable( userEmail, callback );
+          userQueueUtils.upgradeUser (userEmail, callback);
         }
       });
     }
@@ -47,10 +50,11 @@ appInitUtils.initApp( 'addUserToResumeDownload', initActions, conf, function() {
       if ( err ) {
         winston.handleError( err );
       }
+      console.log ('finished');
       mongoose.disconnect();
     }
   }
 
   //Do it.
-  addUserToResumeDownload.run( addUserToResumeDownload.finish );
+  upgradeUser.run( upgradeUser.finish );
 });

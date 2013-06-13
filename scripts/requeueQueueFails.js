@@ -28,7 +28,7 @@ appInitUtils.initApp( 'queueFails', initActions, conf, function() {
     }
     else if (foundFails) {
 
-      winston.doInfo ('About to send messages to queue', {numMessages : foundFails.length});
+      winston.doWarn ('About to send messages to queue', {numMessages : foundFails.length});
 
       foundFails.forEach (function (fail) {
 
@@ -42,6 +42,8 @@ appInitUtils.initApp( 'queueFails', initActions, conf, function() {
             }
             winston.doInfo('job', {job: job});
           })
+        } else if (queue == 'mailReader') {
+
         }
 
       });
