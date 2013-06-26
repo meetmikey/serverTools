@@ -7,7 +7,9 @@ var conf = require(serverCommon + '/conf')
   , mongoose = require(serverCommon + '/lib/mongooseConnect').mongoose
   , prompt = require('prompt')
 
-if ( ( ! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
+conf.turnDebugModeOn()
+
+if ((! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
   winston.doWarn('Missing params: usage: node deleteUser.js <email> <also delete user object (true/false)>');
   process.exit(1);
 }
