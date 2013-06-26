@@ -32,18 +32,31 @@ appInitUtils.initApp( 'queueFails', initActions, conf, function() {
 
       foundFails.forEach (function (fail) {
 
-        var job = JSON.parse (fail.body);
-        var queue = fail.queueName;
-
-        if (queue == 'Worker' || queue == 'WorkerReindex') {
+        var job = JSON.parse (JSON.parse (fail.body));
+        var queue = fail.queueName.toLowerCase();
+        
+        if (queue == 'worker' || queue == 'workerreindex') {
           sqsConnect.addMessageToWorkerQueue (job, function (err) {
             if (err) {
               winston.handleError(err);
             }
             winston.doInfo('job', {job: job});
           })
-        } else if (queue == 'mailReader') {
+        } else if (queue == 'mailreader') {
+          sqsConnect.addMessageToMailReaderQueue (job, function (err) {
+            if (err) {
+              winston.handleError(err);
+            }
+            winston.doInfo('job', {job: job});
+          })
 
+        } else if (queue == 'mailreaderquick') {
+          sqsConnect.addMessageToMailReaderQuickQueue (job, function (err) {
+            if (err) {
+              winston.handleError(err);
+            }
+            winston.doInfo('job', {job: job});
+          })
         }
 
       });
