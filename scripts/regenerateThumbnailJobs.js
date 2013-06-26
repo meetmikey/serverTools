@@ -8,7 +8,7 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
     mongoose = require (serverCommon + '/lib/mongooseConnect').mongoose;
 
 var LinkInfoModel = mongoose.model ('LinkInfo');
-var AttachmentModel = mongoose.model ('Attachment');
+var AttachmentInfoModel = mongoose.model ('AttachmentInfo');
 
 var initActions = [
   appInitUtils.CONNECT_MONGO
@@ -16,6 +16,7 @@ var initActions = [
 
 
 appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
+  conf.turnDebugModeOn();
 
   var limit = 100;
 
@@ -23,42 +24,6 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
     limit = parseInt (process.argv[2]);
     winston.doInfo('limit', {limit: limit});
   }
-
-  // TODO : add some indexes
-  var linkInfoQuery = {
-    image : {$exists : true}, 
-    imageThumbExists : {$exists : false},
-    imageThumbErr : {$ne : true}
-  };
-
-  LinkInfoModel.find (linkInfoQuery,
-    '_id comparableURLHash image',
-    {limit : limit},
-    function (err, linkInfos) {
-    if (err) {
-      winston.doMongoError ('Could not get mail', {err : err});
-    }
-    else if (linkInfos) {
-
-      winston.doInfo ('About to send messages to queue', {numMessages : linkInfos.length});
-
-      linkInfos.forEach (function (linkInfo) {
-
-        // make job to generate thumbnail
-        var thumbnailJob = {
-          comparableURLHash : linkInfo.comparableURLHash,
-          cloudPath : linkInfo.image,
-          isRollover : true,
-          resourceId : linkInfo._id,
-          jobType : 'thumbnail',
-          modelName : 'LinkInfo'
-        }
-
-        sqsConnect.addMessageToWorkerQueue (thumbnailJob);
-
-      });
-    }
-  });
 
   var attachmentQuery = {
     isImage : true, 
@@ -68,39 +33,35 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
   AttachmentInfoModel.find (attachmentQuery,
     '_id hash fileSize',
     {limit : limit},
-    function (err, attachments) {
+    function (err, attachmentInfos) {
     if (err) {
       winston.doMongoError ('Could not get mail', {err : err});
       return;
     }
 
-    winston.doInfo ('About to send messages to queue', {numMessages : attachments.length});
-    var done = {};
+    winston.doInfo ('About to send messages to queue', {numMessages : attachmentInfos.length});
 
     var pushCount = 0;
-    attachments.forEach (function (attachment) {
+    attachmentInfos.forEach (function (attachment) {
 
-      if (!(attachment.hash in done)) {
+      if (attachment.attachmentThumbSkip) { return; }
 
-        var cloudPath = cloudStorageUtils.getAttachmentPath (attachment);
+      var cloudPath = cloudStorageUtils.getAttachmentPath (attachment);
 
-        var thumbnailJob = {
-          cloudPath : cloudPath,
-          isRollover : false,
-          resourceId : attachment._id,
-          hash : attachment.hash,
-          fileSize : attachment.fileSize,
-          jobType : 'thumbnail',
-          modelName : 'Attachment'
-        };
+      var thumbnailJob = {
+        cloudPath : cloudPath,
+        isRollover : false,
+        resourceId : attachment._id,
+        hash : attachment.hash,
+        fileSize : attachment.fileSize,
+        jobType : 'thumbnail',
+        modelName : 'Attachment'
+      };
 
-        sqsConnect.addMessageToWorkerQueue (thumbnailJob);
+      sqsConnect.addMessageToWorkerQueue (thumbnailJob);
 
-        done [attachment.hash] = 1;
-
-        pushCount+=1;
-        winston.doInfo('pushCount', {pushCount: pushCount});
-      }
+      pushCount+=1;
+      winston.doInfo('pushCount', {pushCount: pushCount});
 
     });
   
