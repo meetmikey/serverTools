@@ -9,7 +9,7 @@ df -h
 #on RHEL:
 vi /etc/sysconfig/network #change HOSTNAME to <somehost>.meetmikey.com
 #on debian
-vi /etc/hostname
+vi /etc/hostname #file should just contain "<somehost>"
 vi /etc/hosts #add <somehost>.meetmikey.com so it reads something like "127.0.0.1  tools.meetmikey.com localhost localhost.localdomain"
 hostname <somehost>.meetmikey.com
 #on RHEL:
