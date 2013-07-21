@@ -30,57 +30,60 @@ appInitUtils.initApp( 'mailRecoveryByUser', initActions, conf, function() {
   //db.mails.count ({_id : {$gt : ObjectId("51eb157a35269ba75319570b"), $lt : ObjectId("51ec1c63eb3ed3360b12c11b")}})
 //  UserModel.find ({timestamp : {$gte : "2013-07-20T23:00:00.780Z", $lte : "2013-07-21T16:21:25.860Z"}}, function (err, users) {
 
-  UserModel.find ({timestamp : {$gte : "2013-07-20T23:00:00.780Z", $lte : "2013-07-20T23:00:00.780Z"}}, function (err, users) {
-    if (err) {
-      winston.doMongoError (err);
-    } else {
 
-      async.forEachSeries (users, function (user, userCallback) {
-        winston.doInfo ('starting user', {user : user.email});
+  UserModel.find ({}, null, {limit : 1}, function (err, users) {
+      if (err) {
+        winston.doMongoError (err);
+      } else {
 
-        MailModel.find ({userId : user._id, mmDone : true}, function (err, mails) {
-          winston.doInfo ('mail len', {len : mails.length});
+        async.forEachSeries (users, function (user, userCallback) {
+          winston.doInfo ('starting user', {user : user.email});
 
-          var mailToRequeue = _.filter (mails, function (mail) {
-            return mail.mmDone && mail.linkExtractorState == 'ignored';
-          });
+          MailModel.find ({userId : user._id, mmDone : true, gmDate : {$gte : '2013-07-20T23:00:00.780Z'}}, function (err, mails) {
+            winston.doInfo ('mail len', {len : mails.length});
 
-          console.log ('requeue len', mailToRequeue.length)
-
-          if (mailToRequeue.length) {
-            winston.doInfo ('mailToRequeue', {len : mailToRequeue.length});
-
-            var ids = _.pluck (mailToRequeue, '_id');
-
-            MailModel.update ({_id : {$in : ids}}, {$set : {mailReaderState : 'started'}}, function (err, num) {
-              if (err) {
-                userCallback (winston.makeMongoError (err));
-              } else if (num == 0) {
-                userCallback (winston.makeError ('nothing affected'));
-              } else {
-
-                winston.doInfo ('models updated, about to requeue');
-                console.log ('sample', ids[0]);
-                async.forEach (mailToRequeue, function (mail, rqCallback) {
-
-                  var message = {'userId' : mail.userId, 'path' : mail.s3Path, 'mailId' : mail._id, 'inAzure' : true};
-                  sqsConnect.addMessageToMailReaderQueue (message , function (err) {
-                    if (err) {
-                      rqCallback (err);
-                    } else {
-                      rqCallback();
-                    }
-                  });
-
-                }, function (err) {
-                  winston.doInfo ('all requeued');
-                  userCallback (err);
-                });
-
-              }
+            var mailToRequeue = _.filter (mails, function (mail) {
+              return mail.mmDone && mail.linkExtractorState == 'ignored';
             });
 
-          } else {
+            console.log ('requeue len', mailToRequeue.length)
+
+            if (mailToRequeue.length) {
+              winston.doInfo ('mailToRequeue', {len : mailToRequeue.length});
+
+              var ids = _.pluck (mailToRequeue, '_id');
+
+              MailModel.update ({_id : {$in : ids}}, {$set : {mailReaderState : 'started', tries : 0}}, {multi : true}, function (err, num) {
+                if (err) {
+                  userCallback (winston.makeMongoError (err));
+                } else if (num == 0) {
+                  userCallback (winston.makeError ('nothing affected'));
+                } else {
+
+                  winston.doInfo ('models updated, about to requeue', {num : num});
+                  console.log ('sample', ids[0]);
+
+
+                  async.forEach (mailToRequeue, function (mail, rqCallback) {
+
+                    var message = {'userId' : mail.userId, 'path' : mail.s3Path, 'mailId' : mail._id, 'inAzure' : true};
+                    sqsConnect.addMessageToMailReaderQueue (message , function (err) {
+                      if (err) {
+                        rqCallback (err);
+                      } else {
+                        rqCallback();
+                      }
+                    });
+
+                  }, function (err) {
+                    winston.doInfo ('all requeued');
+                    userCallback (err);
+                  });
+
+                }
+              });
+
+            } else {
             winston.doInfo ('no mail to requeue', {len : mailToRequeue.length});
             userCallback();
           }
@@ -89,10 +92,11 @@ appInitUtils.initApp( 'mailRecoveryByUser', initActions, conf, function() {
       }, function (err) {
         if (err) {
           winston.handleError (err);
+        } else {
+          winston.doInfo ('all done for all users');
         }
       });
     }
   });
-
 
 });
