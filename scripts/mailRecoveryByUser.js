@@ -28,13 +28,14 @@ if (process.argv.length > 2) {
 appInitUtils.initApp( 'mailRecoveryByUser', initActions, conf, function() {
 
   //db.mails.count ({_id : {$gt : ObjectId("51eb157a35269ba75319570b"), $lt : ObjectId("51ec1c63eb3ed3360b12c11b")}})
+//  UserModel.find ({timestamp : {$gte : "2013-07-20T23:00:00.780Z", $lte : "2013-07-21T16:21:25.860Z"}}, function (err, users) {
 
-  UserModel.find ({timestamp : {$gte : "2013-07-20T23:00:00.780Z", $lte : "2013-07-21T16:21:25.860Z"}}, function (err, users) {
+  UserModel.find ({timestamp : {$gte : "2013-07-20T23:00:00.780Z", $lte : "2013-07-20T23:00:00.780Z"}}, function (err, users) {
     if (err) {
       winston.doMongoError (err);
     } else {
 
-      async.forEachSeries (users, function (user, cb) {
+      async.forEachSeries (users, function (user, userCallback) {
         winston.doInfo ('starting user', {user : user.email});
 
         MailModel.find ({userId : user._id, mmDone : true}, function (err, mails) {
@@ -51,14 +52,34 @@ appInitUtils.initApp( 'mailRecoveryByUser', initActions, conf, function() {
 
             var ids = _.pluck (mailToRequeue, '_id');
 
-            winston.doInfo ('mail _ids', {len : ids.length});
+            MailModel.update ({_id : {$in : ids}}, {$set : {mailReaderState : 'started'}}, function (err, num) {
+              if (err) {
+                userCallback (winston.makeMongoError (err));
+              } else if (num == 0) {
+                userCallback (winston.makeError ('nothing affected'));
+              } else {
 
-            cb ();
+                async.forEach (mailToRequeue, function (mail, rqCallback) {
+
+                  var message = {'userId' : mail.userId, 'path' : mail.s3Path, 'mailId' : mail._id, 'inAzure' : true};
+                  sqsConnect.addMessageToMailReaderQueue (message , function (err) {
+                    if (err) {
+                      rqCallback (err);
+                    } else {
+                      rqCallback();
+                    }
+                  });
+
+                }, function (err) {
+                  userCallback (err);
+                });
+
+              }
+            });
 
           } else {
             winston.doInfo ('no mail to requeue', {len : mailToRequeue.length});
-
-            cb ();
+            userCallback();
           }
 
         });
