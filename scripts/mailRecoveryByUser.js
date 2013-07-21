@@ -59,6 +59,8 @@ appInitUtils.initApp( 'mailRecoveryByUser', initActions, conf, function() {
                 userCallback (winston.makeError ('nothing affected'));
               } else {
 
+                winston.doInfo ('models updated, about to requeue');
+                console.log ('sample', ids[0]);
                 async.forEach (mailToRequeue, function (mail, rqCallback) {
 
                   var message = {'userId' : mail.userId, 'path' : mail.s3Path, 'mailId' : mail._id, 'inAzure' : true};
@@ -71,6 +73,7 @@ appInitUtils.initApp( 'mailRecoveryByUser', initActions, conf, function() {
                   });
 
                 }, function (err) {
+                  winston.doInfo ('all requeued');
                   userCallback (err);
                 });
 
