@@ -1,3 +1,5 @@
+#in the azure portal, start with the "azureMailImage", upload the prodAzureCert.pem, write in the password (one symbol, one number)
+
 sudo -s #enter password (one symbol, one number)
 
 vi /etc/hostname #file should just contain "<somehost>"
@@ -16,3 +18,4 @@ apt-get install -y newrelic-sysmond
 nrsysmond-config --set license_key=a259f8b13662ce34e45a90b7a8d16ebab2e14efb
 /etc/init.d/newrelic-sysmond restart
 
+#add the machine to the elastic search security group in aws
