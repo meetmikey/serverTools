@@ -31,7 +31,7 @@ appInitUtils.initApp( 'mailRecoveryByUser', initActions, conf, function() {
 //  UserModel.find ({timestamp : {$gte : "2013-07-20T23:00:00.780Z", $lte : "2013-07-21T16:21:25.860Z"}}, function (err, users) {
 
 
-  UserModel.find ({}, null, {limit : 1}, function (err, users) {
+  UserModel.find ({}, function (err, users) {
       if (err) {
         winston.doMongoError (err);
       } else {
