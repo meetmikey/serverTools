@@ -38,8 +38,9 @@ appInitUtils.initApp( 'mailRecoveryByUser', initActions, conf, function() {
         winston.doInfo ('starting user', {user : user.email});
 
         MailModel.find ({userId : user._id, mmDone : true}, function (err, mails) {
+          winston.doInfo ('mail len', {len : mails.length});
 
-          var mailToRequeue = _.filter (function (mail) {
+          var mailToRequeue = _.filter (mails, function (mail) {
             return mail.mmDone && mail.linkExtractorState == 'ignored';
           });
 
@@ -48,9 +49,9 @@ appInitUtils.initApp( 'mailRecoveryByUser', initActions, conf, function() {
           if (mailToRequeue.length) {
             winston.doInfo ('mailToRequeue', {len : mailToRequeue.length});
 
-            var ids = _.filter (mailToRequeue, function (mail) {
-              return mail._id
-            });
+            var ids = _.pluck (mailToRequeue, '_id');
+
+            winston.doInfo ('mail _ids', {len : ids.length});
 
             cb ();
 
