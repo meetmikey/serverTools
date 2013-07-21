@@ -1,0 +1,73 @@
+var serverCommon = process.env.SERVER_COMMON;
+
+var winston = require (serverCommon + '/lib/winstonWrapper').winston,
+    sqsConnect = require (serverCommon + '/lib/sqsConnect'),
+    cloudStorageUtils = require (serverCommon + '/lib/cloudStorageUtils'),
+    appInitUtils = require (serverCommon + '/lib/appInitUtils'),
+    conf = require (serverCommon + '/conf'),
+    async = require ('async'),
+    _ = require ('underscore'),
+    mongoose = require (serverCommon + '/lib/mongooseConnect').mongoose;
+
+var MailModel = mongoose.model ('Mail');
+var UserModel = mongoose.model ('User');
+
+var initActions = [
+  appInitUtils.CONNECT_MONGO
+];
+
+conf.turnDebugModeOn();
+
+var limit = 100;
+
+if (process.argv.length > 2) {
+  limit = parseInt (process.argv[2]);
+  winston.doInfo('limit', {limit: limit});
+}
+
+appInitUtils.initApp( 'mailRecoveryByUser', initActions, conf, function() {
+
+  //db.mails.count ({_id : {$gt : ObjectId("51eb157a35269ba75319570b"), $lt : ObjectId("51ec1c63eb3ed3360b12c11b")}})
+
+  UserModel.find ({timestamp : {$gte : "2013-07-20T23:00:00.780Z", $lte : "2013-07-21T16:21:25.860Z"}}, function (err, users) {
+    if (err) {
+      winston.doMongoError (err);
+    } else {
+
+      async.forEachSeries (users, function (user, cb) {
+        winston.doInfo ('starting user', {user : user.email});
+
+        MailModel.find ({userId : user._id, mmDone : true}, function (err, mails) {
+
+          var mailToRequeue = _.filter (function (mail) {
+            return mail.mmDone && mail.linkExtractorState == 'ignored';
+          });
+
+          console.log ('requeue len', mailToRequeue.length)
+
+          if (mailToRequeue.length) {
+            winston.doInfo ('mailToRequeue', {len : mailToRequeue.length});
+
+            var ids = _.filter (mailToRequeue, function (mail) {
+              return mail._id
+            });
+
+            cb ();
+
+          } else {
+            winston.doInfo ('no mail to requeue', {len : mailToRequeue.length});
+
+            cb ();
+          }
+
+        });
+      }, function (err) {
+        if (err) {
+          winston.handleError (err);
+        }
+      });
+    }
+  });
+
+
+});
