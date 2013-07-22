@@ -1,11 +1,13 @@
 REPOSITORIES=( serverTools serverCommon )
 
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 for i in "${REPOSITORIES[@]}"
 do
-  ./buildRepository.sh $i $1
+  $scriptDir/buildRepository.sh $i $1
 done
 
 for i in "${PROGRAMS[@]}"
 do
-  ./startProgram.sh $i
+  $scriptDir/startProgram.sh $i
 done
