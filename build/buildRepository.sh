@@ -47,7 +47,7 @@ if [[ $2 == "clean" ]]
 fi
 npm install
 rm -rf $MIKEY_BUILD/$REPOSITORY
-rsync -rq --exclude=.git $MIKEY_SOURCE/* $MIKEY_BUILD/
-cd $MIKEY_BUILD/$REPOSITORY
+rsync -rq --exclude=.git $MIKEY_SOURCE/$REPOSITORY $MIKEY_BUILD/
+cd -
 
 echo "buildRepository $REPOSITORY done."
