@@ -1,14 +1,15 @@
-ec2Connections=( worker1 worker2 )
-azureConnections=( azureMail1 azureMail2 azureMail3 azureMail4 azureMail5 azureMail6 azureMail7 )
+program=$1
 
-for i in "${ec2Connections[@]}"
-do
-  echo "stopping work on $i"
-  ssh $i /home/mikey/source/serverTools/build/stopWork.sh
-done
+machines=( worker1 worker2 azureMail1 azureMail2 azureMail3 azureMail4 azureMail5 azureMail6 azureMail7 )
 
-for i in "${azureConnections[@]}"
+for i in "${machines[@]}"
 do
-  echo "stopping work on $i"
-  ssh $i /home/mikey/source/serverTools/build/stopWork.sh
+	if [ $program ];
+		then
+			echo "stopping $program on $i"
+		  ssh $i /home/mikey/source/serverTools/build/stopWork.sh $program
+		else
+		  echo "stopping all work on $i"
+		  ssh $i /home/mikey/source/serverTools/build/stopWork.sh
+	fi
 done
