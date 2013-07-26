@@ -1,7 +1,7 @@
 var serverCommon = process.env.SERVER_COMMON;
 
 var conf = require(serverCommon + '/conf')
-  , extraDaysUtils = require('../lib/extraDaysUtils')
+  , grantUserUtils = require('../lib/grantUserUtils')
   , appInitUtils = require(serverCommon + '/lib/appInitUtils')
   , winston = require(serverCommon + '/lib/winstonWrapper').winston
   , mongoose = require(serverCommon + '/lib/mongooseConnect').mongoose
@@ -10,7 +10,7 @@ var conf = require(serverCommon + '/conf')
 conf.turnDebugModeOn()
 
 if ((! process ) || ( ! process.argv ) || ( process.argv.length < 5 ) ) {
-  winston.doWarn('Missing params: usage: node grantExtraDays.js <user email> <num extra days> <your last name>');
+  winston.doWarn('Missing params: usage: node grantUserExtraDays.js <user email> <num extra days> <your last name>');
   process.exit(1);
 }
 
@@ -18,9 +18,9 @@ var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
 
-appInitUtils.initApp( 'grantExtraDays', initActions, conf, function() {
+appInitUtils.initApp( 'grantUserExtraDays', initActions, conf, function() {
 
-  var grantExtraDays = {
+  var grantUserExtraDays = {
     
     run: function( callback ) {
 
@@ -29,7 +29,7 @@ appInitUtils.initApp( 'grantExtraDays', initActions, conf, function() {
       var grantorLastName = process.argv[4];
 
       prompt.start();
-      var message = '\nThis will add ' + numExtraDays + ' days to ' + userEmail + '\'s account.  Are you sure?';
+      var message = '\nThis will grant ' + numExtraDays + ' days to ' + userEmail + '\'s account.  Are you sure?';
       winston.consoleLog( message );
 
       var grantPrompt = '(y/n)';
@@ -42,7 +42,7 @@ appInitUtils.initApp( 'grantExtraDays', initActions, conf, function() {
           callback();
 
         } else {
-          extraDaysUtils.grantExtraDays( userEmail, numExtraDays, grantorLastName, callback );
+          grantUserUtils.grantUserExtraDays( userEmail, numExtraDays, grantorLastName, callback );
         }
       });
     }
@@ -56,5 +56,5 @@ appInitUtils.initApp( 'grantExtraDays', initActions, conf, function() {
   }
 
   //Do it.
-  grantExtraDays.run( grantExtraDays.finish );
+  grantUserExtraDays.run( grantUserExtraDays.finish );
 });

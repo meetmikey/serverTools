@@ -2,7 +2,7 @@ var serverCommon = process.env.SERVER_COMMON;
 
 var conf = require(serverCommon + '/conf')
   , deleteUserUtils = require('../lib/deleteUserUtils')
-  , userQueueUtils = require('../lib/userQueueUtils')
+  , grantUserUtils = require('../lib/grantUserUtils')
   , appInitUtils = require(serverCommon + '/lib/appInitUtils')
   , winston = require(serverCommon + '/lib/winstonWrapper').winston
   , mongoose = require(serverCommon + '/lib/mongooseConnect').mongoose
@@ -18,20 +18,20 @@ var initActions = [
   , appInitUtils.CONNECT_MONGO
 ];
 
-appInitUtils.initApp( 'upgradeUser', initActions, conf, function() {
+appInitUtils.initApp( 'grantUserPremium', initActions, conf, function() {
 
-  var upgradeUser = {
+  var grantUserPremium = {
     
     run: function( callback ) {
 
       var userEmail = process.argv[2];
 
       prompt.start();
-      var message = 'This will upgrade the user: ' + userEmail + ' to premium.';
+      var message = 'This will grant user ' + userEmail + ' premium.';
       console.log();
       console.log( message );
 
-      var resetPrompt = 'upgrade this user? (y/n)'
+      var resetPrompt = 'grant ' + userEmail + ' premium? (y/n)'
       prompt.get([resetPrompt], function (err, result) {
         if ( err ) {
           callback( winston.makeError('prompt error', {promptError: err}) );
@@ -41,7 +41,7 @@ appInitUtils.initApp( 'upgradeUser', initActions, conf, function() {
           callback();
 
         } else {
-          userQueueUtils.upgradeUser (userEmail, callback);
+          grantUserUtils.grantUserPremium( userEmail, callback );
         }
       });
     }
@@ -56,5 +56,5 @@ appInitUtils.initApp( 'upgradeUser', initActions, conf, function() {
   }
 
   //Do it.
-  upgradeUser.run( upgradeUser.finish );
+  grantUserPremium.run( grantUserPremium.finish );
 });
