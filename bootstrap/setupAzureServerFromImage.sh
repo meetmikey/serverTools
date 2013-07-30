@@ -21,4 +21,7 @@ nrsysmond-config --set license_key=a259f8b13662ce34e45a90b7a8d16ebab2e14efb
 #add the machine in route53 with a CNAME (point from X.cloudapp.net to azureMailX.meetmikey.com)
 #add the value of tools:/home/mikey/.ssh/id_rsa.pub to server:/home/mikey/.ssh/authorized_keys
 #add the machine to the elastic search security group in aws
+#copy the latest secureConf.js file to /home/mikey/source/serverCommon/secureConf.js
 #add the machine name and ssh port to serverTools/build/buildAzureServers.sh
+
+#run /home/mikey/source/serverTools/scripts/buildAzureServer.sh
