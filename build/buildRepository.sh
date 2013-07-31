@@ -40,6 +40,7 @@ cd $MIKEY_SOURCE/$REPOSITORY
 git fetch
 git checkout $MIKEY_BRANCH
 git pull origin $MIKEY_BRANCH
+git fetch
 if [[ $2 == "clean" ]]
   then
     echo "cleaning node_modules..."
