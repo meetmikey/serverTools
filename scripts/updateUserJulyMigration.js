@@ -31,6 +31,9 @@ appInitUtils.initApp( 'updateUserJulyMigration', initActions, conf, function() {
             .exec (function (err, mail) {
               if (err) {
                 userCallback (winston.makeMongoError (err));
+              } else if (!mail) {
+                winston.doWarn ('user has no mail', {email:user.email});
+                userCallback ();
               } else {
 
                 user.lastResumeJobEndDate = mail.gmDate;
