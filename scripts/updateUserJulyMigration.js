@@ -31,12 +31,20 @@ appInitUtils.initApp( 'updateUserJulyMigration', initActions, conf, function() {
             .exec (function (err, mail) {
               if (err) {
                 userCallback (winston.makeMongoError (err));
-              } else if (!mail) {
-                winston.doWarn ('user has no mail', {email:user.email});
-                userCallback ();
-              } else {
+              } else  {
 
-                user.lastResumeJobEndDate = mail.gmDate;
+                if (user.lastResumeJobEndDate) {
+                  userCallback();
+                  return;
+                }
+
+                var lastResumeJobEndDate = user.minProcessedDate;
+
+                if (mail) {
+                  lastResumeJobEndDate = mail.gmDate;
+                }
+
+                user.lastResumeJobEndDate = lastResumeJobEndDate;
 
                 if (user.isPremium) {
                   user.isGrantedPremium = true;
