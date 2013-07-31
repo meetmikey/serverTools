@@ -16,11 +16,6 @@ var initActions = [
 
 conf.turnDebugModeOn();
 
-if (process.argv.length > 2) {
-  limit = parseInt (process.argv[2]);
-  winston.doInfo('limit', {limit: limit});
-}
-
 appInitUtils.initApp( 'updateUserJulyMigration', initActions, conf, function() {
 
   UserModel.find ({}, function (err, users) {
@@ -31,14 +26,25 @@ appInitUtils.initApp( 'updateUserJulyMigration', initActions, conf, function() {
         async.forEachSeries (users, function (user, userCallback) {
           winston.doInfo ('starting user', {user : user.email});
 
-          MailModel.findOne ({userId : user._id})
+          MailModel.findOne ({userId : user._id, mmDone : true})
             .sort ('gmDate')
             .exec (function (err, mail) {
               if (err) {
                 userCallback (winston.makeMongoError (err));
-              } else {
+              } else  {
 
-                user.lastResumeJobEndDate = mail.gmDate;
+                if (user.lastResumeJobEndDate) {
+                  userCallback();
+                  return;
+                }
+
+                var lastResumeJobEndDate = user.minProcessedDate;
+
+                if (mail) {
+                  lastResumeJobEndDate = mail.gmDate;
+                }
+
+                user.lastResumeJobEndDate = lastResumeJobEndDate;
 
                 if (user.isPremium) {
                   user.isGrantedPremium = true;
