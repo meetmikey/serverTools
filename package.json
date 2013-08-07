@@ -5,6 +5,7 @@
   "dependencies": {
       "async": "=0.2.7"
     , "prompt": "=0.2.9"
+    , "mixpanel" : "=0.0.16"
     , "underscore" : "=1.4.4"
   },
   "engines": {
