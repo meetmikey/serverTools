@@ -41,6 +41,8 @@ appInitUtils.initApp( 'mixpanelFill', initActions, conf, function() {
         });        
       });
 
+      console.log ('done with '  + len + 'users');
+
     }
 
   });
