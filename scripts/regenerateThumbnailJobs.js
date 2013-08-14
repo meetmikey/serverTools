@@ -27,7 +27,8 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
 
   var attachmentQuery = {
     isImage : true, 
-    attachmentThumbExists : {$ne : true}
+    attachmentThumbExists : {$ne : true},
+    attachmentThumbSkip : {$ne : true}
   };
 
   AttachmentInfoModel.find (attachmentQuery,
@@ -58,7 +59,7 @@ appInitUtils.initApp( 'regenerateThumbnailJobs', initActions, conf, function() {
         modelName : 'Attachment'
       };
 
-      sqsConnect.addMessageToWorkerQueue (thumbnailJob);
+      sqsConnect.addMessageToThumbnailQueue (thumbnailJob);
 
       pushCount+=1;
       winston.doInfo('pushCount', {pushCount: pushCount});
