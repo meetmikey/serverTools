@@ -10,7 +10,7 @@ fi
 echo "startProgram: $PROGRAM..."
 
 cd $MIKEY_BUILD/$PROGRAM
-./stop.sh
+./stop.sh $2
 ./start.sh
 cd -
 
