@@ -1,4 +1,4 @@
-machines=( api1 api2 )
+machines=( api1 api2 api3 )
 
 for i in "${machines[@]}"
 
