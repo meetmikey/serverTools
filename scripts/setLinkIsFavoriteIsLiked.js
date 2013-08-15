@@ -24,6 +24,10 @@ appInitUtils.initApp( 'setLinkIsFavoriteIsLiked', initActions, conf, function() 
         setLinkIsFavoriteIsLiked.finalCallback = callback;
         setTimeout( function() {
           var lowestId = null;
+          if ( process.argv[2] ) {
+            lowestId = process.argv[2];
+            winston.doInfo('starting from id', {lowestId: lowestId});
+          }
           setLinkIsFavoriteIsLiked.updateNextSet( lowestId, setLinkIsFavoriteIsLiked.checkUpdateNextSetResult );
         }, 0);
       }
