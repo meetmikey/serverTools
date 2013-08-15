@@ -16,7 +16,7 @@ appInitUtils.initApp( 'setLinkIsFavoriteIsLiked', initActions, conf, function() 
 
   var setLinkIsFavoriteIsLiked = {
     
-      BATCH_SIZE: 500
+      BATCH_SIZE: 5000
     , finalCallback: null
     , totalSet: 0
 
