@@ -10,6 +10,8 @@ var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
 
+conf.turnDebugModeOn();
+
 appInitUtils.initApp( 'setLinkIsFavoriteIsLiked', initActions, conf, function() {
 
   var setLinkIsFavoriteIsLiked = {
