@@ -28,7 +28,7 @@ appInitUtils.initApp( 'setLinkIsFavoriteIsLiked', initActions, conf, function() 
         }, 0);
       }
 
-    , checkUpdateNextSetResult: function( err, newHighestId, isDone ) {
+    , checkUpdateNextSetResult: function( err, newLowestId, isDone ) {
         if ( err ) {
           callback(err);
 
@@ -36,7 +36,7 @@ appInitUtils.initApp( 'setLinkIsFavoriteIsLiked', initActions, conf, function() 
           setLinkIsFavoriteIsLiked.finalCallback()
 
         } else {
-          setTimeout( setLinkIsFavoriteIsLiked.updateNextSet( newHighestId, setLinkIsFavoriteIsLiked.checkUpdateNextSetResult ), 0 );
+          setTimeout( setLinkIsFavoriteIsLiked.updateNextSet( newLowestId, setLinkIsFavoriteIsLiked.checkUpdateNextSetResult ), 0 );
         }
       }
 
@@ -57,9 +57,10 @@ appInitUtils.initApp( 'setLinkIsFavoriteIsLiked', initActions, conf, function() 
 
             var filter = {}
             if ( lowestId ) {
-              filter['_id'] = {$gt: lowestId};
+              filter['_id'] = {$gt: lowestId, $lte: highestId};
+            } else {
+              filter['_id'] = {$lte: highestId};
             }
-            filter['_id'] = {$lte: highestId};
 
             var updateData = {$set:{
                 isFavorite: false
