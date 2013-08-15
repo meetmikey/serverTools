@@ -16,6 +16,7 @@ appInitUtils.initApp( 'setLinkIsFavoriteIsLiked', initActions, conf, function() 
     
       BATCH_SIZE: 500
     , finalCallback: null
+    , totalSet: 0
 
     , run: function( callback ) {
         setLinkIsFavoriteIsLiked.finalCallback = callback;
@@ -65,13 +66,15 @@ appInitUtils.initApp( 'setLinkIsFavoriteIsLiked', initActions, conf, function() 
 
             var options = {
               multi: true
-            }
+            };
 
-            LinkModel.update( filter, updateData, options, function(mongoErr) {
+            LinkModel.update( filter, updateData, options, function(mongoErr, numAffected) {
               if ( mongoErr ) {
                 callback( winston.makeMongoErr(mongoErr) );
 
               } else {
+                setLinkIsFavoriteIsLiked.totalSet += numAffected;
+                winston.doInfo('finished batch', {highestId: highestId, totalSet: setLinkIsFavoriteIsLiked.totalSet});
                 callback( null, newHighestId, false );
               }
             }); 
@@ -99,7 +102,6 @@ appInitUtils.initApp( 'setLinkIsFavoriteIsLiked', initActions, conf, function() 
 
             } else {
               var newHighestId = foundLinks[ foundLinks.length - 1 ]._id;
-              winston.doInfo('newHighestId', {newHighestId: newHighestId});
               callback( null, newHighestId, false );
             }
           }
