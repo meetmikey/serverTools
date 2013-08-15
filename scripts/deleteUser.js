@@ -32,9 +32,11 @@ appInitUtils.initApp( 'deletUser', initActions, conf, function() {
       }
 
       prompt.start();
-      var message = '\nThis will delete EVERYTHING about this user';
+      var message = '\nThis will delete EVERYTHING about user ' + userEmail;
       if ( deleteUserObject ) {
         message += ', including the user itself';
+      } else {
+        message += ', except the user itself';
       }
       message += '.  Are you SURE?';
       winston.consoleLog( message );
