@@ -249,7 +249,7 @@ ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/delegates/
 #then install package
 wget ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/1.3/GraphicsMagick-1.3.18.tar.gz
 tar -xvzf GraphicsMagick-1.3.18.tar.gz
-cd GraphicsMagick-1.3.18.tar.gz
+cd GraphicsMagick-1.3.18
 ./configure
 make
 sudo make install
