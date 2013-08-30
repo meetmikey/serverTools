@@ -23,6 +23,7 @@ appInitUtils.initApp( 'addUserToResumeDownload', initActions, conf, function() {
     run: function( callback ) {
 
       var userEmail = process.argv[2];
+      var onlyRetrieve = process.argv[3];
 
       prompt.start();
       var message = '\nThis will add this user to the resume download table for right now.  Are you SURE?';
@@ -38,7 +39,11 @@ appInitUtils.initApp( 'addUserToResumeDownload', initActions, conf, function() {
           callback();
 
         } else {
-          userQueueUtils.findAndAddUserToResumeTable( userEmail, callback );
+          var startingPoint;
+          if (onlyRetrieve && onlyRetrieve == 'true') {
+            startingPoint = 'markMarketingTextEmails'
+          }
+          userQueueUtils.findAndAddUserToResumeTable( userEmail, startingPoint, callback );
         }
       });
     }
