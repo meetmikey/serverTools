@@ -20,12 +20,20 @@ var pollFunction;
 
 if (queueName == 'worker') {
   pollFunction = sqsConnect.pollWorkerQueue;
+} else if (queueName == 'workerquick') {
+  pollFunction = sqsConnect.pollWorkerQuickQueue;
+} else if (queueName == 'thumbnail') {
+  pollFunction = sqsConnect.pollThumbnailQueue;
+} else if (queueName == 'thumbnailquick') {
+  pollFunction = sqsConnect.pollThumbnailQuickQueue;
 } else if (queueName == 'mailreader') {
   pollFunction = sqsConnect.pollMailReaderQueue;
 } else if (queueName == 'mailreaderquick') {
   pollFunction = sqsConnect.pollMailReaderQuickQueue;
 } else if (queueName == 'maildownload') {
   pollFunction = sqsConnect.pollMailDownloadQueue;
+} else if (queueName == 'thumbnail') {
+  pollFunction = sqsConnect.pollThumbnailQueue;
 } else {
   winston.doError ('invalid queue name');
   process.exit(1);
