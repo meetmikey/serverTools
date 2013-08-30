@@ -17,7 +17,7 @@ do
   echo "waiting for traffic to stop on $i..."
   sleep $waitTimeSeconds
   echo "building $i..."
-  #ssh $i /home/mikey/source/serverTools/build/buildAPIServer.sh $1
+  ssh $i /home/mikey/source/serverTools/build/buildAPIServer.sh $1
   echo "putting $i back in the load balancer..."
   elb-register-instances-with-lb $loadBalancer --instances $instance
   echo "waiting for traffic to start on $i..."
