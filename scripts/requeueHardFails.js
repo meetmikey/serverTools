@@ -12,6 +12,8 @@ var winston = require (serverCommon + '/lib/winstonWrapper').winston,
 
 var MailModel = mongoose.model ('Mail');
 
+conf.turnDebugModeOn();
+
 var initActions = [
   appInitUtils.CONNECT_MONGO
 ];
@@ -28,15 +30,19 @@ appInitUtils.initApp( 'requeueHardFails', initActions, conf, function() {
 
   var cutoff = utils.objectIdWithTimestamp (Date.now() - 1000*60*60*5);
 
-  MailModel.find ({_id : {$gte : cutoff}},
+  MailModel.find ({_id : {$gte : cutoff}, mailReaderState : 'hardFail'},
     function (err, foundMails) {
     if (err) {
       winston.doMongoError ('Could not get mail', {err : err});
     } else if (foundMails) {
+      winston.doInfo ('foundMail len', {len : foundMails.length});
 
       var mailToQueue = _.filter (foundMails, function (mail) {
         return mail.mailReaderState == 'hardFail';
       });
+
+      winston.doInfo ('mailToQueue len', {len : mailToQueue.length});
+
 
       // update tries to 0 and state to started
       var mailIds = _.map (mailToQueue, function (mail) { return mail._id });
