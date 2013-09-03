@@ -39,11 +39,12 @@ appInitUtils.initApp( 'addUserToResumeDownload', initActions, conf, function() {
           callback();
 
         } else {
-          var startingPoint;
+          var lastCompleted;
           if (onlyRetrieve && onlyRetrieve == 'true') {
-            startingPoint = 'markMarketingTextEmails'
+            lastCompleted = 'markMarketingTextEmails'
           }
-          userQueueUtils.findAndAddUserToResumeTable( userEmail, startingPoint, callback );
+          winston.consoleLog ('lastCompleted', lastCompleted);
+          userQueueUtils.findAndAddUserToResumeTable( userEmail, lastCompleted, callback );
         }
       });
     }
