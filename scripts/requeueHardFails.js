@@ -17,7 +17,7 @@ var initActions = [
 ];
 
 var limit = 100;
-var offset = 1000*60*60*25; // 5 hours
+var offset = 1000*60*60*8; // 8 hours
 
 if (process.argv.length > 2) {
   limit = parseInt (process.argv[2]);
