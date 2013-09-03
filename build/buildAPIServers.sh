@@ -16,11 +16,11 @@ do
   elb-deregister-instances-from-lb $loadBalancer --instances $instance
   echo "waiting for traffic to stop on $i..."
   sleep $waitTimeSeconds
-  echo "restarting mikeyAPI on $i..."
-  ssh $i /home/mikey/source/serverTools/build/startProgram.sh mikeyAPI now
+  echo "building $i..."
+  ssh $i /home/mikey/source/serverTools/build/buildAPIServer.sh $1
   echo "putting $i back in the load balancer..."
   elb-register-instances-with-lb $loadBalancer --instances $instance
   echo "waiting for traffic to start on $i..."
   sleep $waitTimeSeconds
-  echo "done restarting mikeyAPI on $i."
+  echo "done building $i."
 done
