@@ -7,6 +7,7 @@ var conf = require(serverCommon + '/conf')
   , winston = require(serverCommon + '/lib/winstonWrapper').winston
   , mongoose = require(serverCommon + '/lib/mongooseConnect').mongoose
   , prompt = require('prompt')
+  , serverCommonConstants = require(serverCommon + '/constants')
 
 if ( ( ! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
   winston.doWarn('Missing params: usage: node resetUser.js <email>');
@@ -18,21 +19,21 @@ var initActions = [
   , appInitUtils.CONNECT_MONGO
 ];
 
-appInitUtils.initApp( 'grantUserPremium', initActions, conf, function() {
+appInitUtils.initApp( 'grantUserFacebookLike', initActions, conf, function() {
 
-  var grantUserPremium = {
+  var grantUserFacebookLike = {
     
     run: function( callback ) {
 
       var userEmail = process.argv[2];
 
       prompt.start();
-      var message = 'This will grant user ' + userEmail + ' premium.';
+      var message = 'This will grant user ' + userEmail + ' credit for a facebook like.';
       console.log();
       console.log( message );
       console.log();
 
-      var resetPrompt = 'grant ' + userEmail + ' premium? (y/n)'
+      var resetPrompt = 'grant ' + userEmail + ' credit for a facebook like? (y/n)'
       prompt.get([resetPrompt], function (err, result) {
         if ( err ) {
           callback( winston.makeError('prompt error', {promptError: err}) );
@@ -42,7 +43,7 @@ appInitUtils.initApp( 'grantUserPremium', initActions, conf, function() {
           callback();
 
         } else {
-          grantUserUtils.grantUserPremium( userEmail, callback );
+          grantUserUtils.grantUserPromotionAction( userEmail, serverCommonConstants.PROMOTION_TYPE_FACEBOOK_LIKE, callback );
         }
       });
     }
@@ -57,5 +58,5 @@ appInitUtils.initApp( 'grantUserPremium', initActions, conf, function() {
   }
 
   //Do it.
-  grantUserPremium.run( grantUserPremium.finish );
+  grantUserFacebookLike.run( grantUserFacebookLike.finish );
 });
