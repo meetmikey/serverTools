@@ -28,17 +28,15 @@ appInitUtils.initApp( 'grantUserChromeStoreReview', initActions, conf, function(
       var userEmail = process.argv[2];
 
       prompt.start();
-      var message = 'This will grant user ' + userEmail + ' credit for a chrome store review.';
-      console.log();
+      var message = '\nThis will grant user ' + userEmail + ' credit for a chrome store review. Are you sure?';
       console.log( message );
-      console.log();
 
-      var resetPrompt = 'grant ' + userEmail + ' credit for a chrome store review? (y/n)'
-      prompt.get([resetPrompt], function (err, result) {
+      var grantPrompt = '(y/n)';
+      prompt.get([grantPrompt], function (err, result) {
         if ( err ) {
           callback( winston.makeError('prompt error', {promptError: err}) );
 
-        } else if ( ( ! result ) || ( ! result[resetPrompt] ) || ( result[resetPrompt] !== 'y' ) ) {
+        } else if ( ( ! result ) || ( ! result[grantPrompt] ) || ( result[grantPrompt] !== 'y' ) ) {
           console.log('Aborted!');
           callback();
 
