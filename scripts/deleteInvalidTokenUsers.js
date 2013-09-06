@@ -49,7 +49,7 @@ appInitUtils.initApp( 'deleteInvalidTokenUsers', initActions, conf, function() {
                   winston.doInfo ('about to delete user', {email : user.email});
                   deleteUserUtils.performUserDelete( user.email, true, function (err) {
                     if (err) {
-                      cb(winston.makeError ('could not perform user delete', {err : err});
+                      cb(winston.makeError ('could not perform user delete', {err : err}));
                       return;
                     }
 
