@@ -7,6 +7,7 @@ var conf = require(serverCommon + '/conf')
   , winston = require(serverCommon + '/lib/winstonWrapper').winston
   , mongoose = require(serverCommon + '/lib/mongooseConnect').mongoose
   , prompt = require('prompt')
+  , serverCommonConstants = require(serverCommon + '/constants')
 
 if ( ( ! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
   winston.doWarn('Missing params: usage: node resetUser.js <email>');
@@ -18,16 +19,16 @@ var initActions = [
   , appInitUtils.CONNECT_MONGO
 ];
 
-appInitUtils.initApp( 'grantUserPremium', initActions, conf, function() {
+appInitUtils.initApp( 'grantUserChromeStoreReview', initActions, conf, function() {
 
-  var grantUserPremium = {
+  var grantUserChromeStoreReview = {
     
     run: function( callback ) {
 
       var userEmail = process.argv[2];
 
       prompt.start();
-      var message = '\nThis will grant user ' + userEmail + ' premium. Are you sure?';
+      var message = '\nThis will grant user ' + userEmail + ' credit for a chrome store review. Are you sure?';
       console.log( message );
 
       var grantPrompt = '(y/n)';
@@ -40,7 +41,7 @@ appInitUtils.initApp( 'grantUserPremium', initActions, conf, function() {
           callback();
 
         } else {
-          grantUserUtils.grantUserPremium( userEmail, callback );
+          grantUserUtils.grantUserPromotionAction( userEmail, serverCommonConstants.PROMOTION_TYPE_CHROMESTORE_REVIEW, callback );
         }
       });
     }
@@ -55,5 +56,5 @@ appInitUtils.initApp( 'grantUserPremium', initActions, conf, function() {
   }
 
   //Do it.
-  grantUserPremium.run( grantUserPremium.finish );
+  grantUserChromeStoreReview.run( grantUserChromeStoreReview.finish );
 });
