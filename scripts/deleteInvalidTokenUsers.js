@@ -39,13 +39,20 @@ appInitUtils.initApp( 'deleteInvalidTokenUsers', initActions, conf, function() {
           callback();
 
         } else {
-          UserModel.find ({invalidToken : true}, {limit : 1}, function (err, usersToDelete) {
+          UserModel.find ({invalidToken : true}, '_id email lastLogin', {limit : 2}, function (err, usersToDelete) {
             if (err) {
               winston.doMongoError (err);
             } else {
               winston.doInfo ('deleting users',  {length : usersToDelete.length});
               async.eachSeries (usersToDelete, 
                 function (user, cb) {
+                  
+                  if (user.lastLogin) {
+                    cb();
+                    winston.doInfo ('not deleting user', {email : user.email});
+                    return;
+                  }
+
                   winston.doInfo ('about to delete user', {email : user.email});
                   deleteUserUtils.performUserDelete( user.email, true, function (err) {
                     if (err) {
