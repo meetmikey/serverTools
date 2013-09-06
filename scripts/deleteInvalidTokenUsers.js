@@ -39,25 +39,33 @@ appInitUtils.initApp( 'deleteInvalidTokenUsers', initActions, conf, function() {
           callback();
 
         } else {
-          UserModel.find ({invalidToken : true},  function (err, usersToDelete) {
+          UserModel.find ({invalidToken : true}, {limit : 1}, function (err, usersToDelete) {
             if (err) {
               winston.doMongoError (err);
             } else {
-              winston.doInfo ('deleting users', {limit : 1}, {length : usersToDelete.length});
-              async.eachSeries (usersToDelete, function (user, cb) {
-                winston.doInfo ('about to delete user', {email : user.email});
-                deleteUserUtils.performUserDelete( user.email, true, function (err) {
-                  //deregister from mp
-                  mixpanel.people.delete_user (user._id, function (err) {
+              winston.doInfo ('deleting users',  {length : usersToDelete.length});
+              async.eachSeries (usersToDelete, 
+                function (user, cb) {
+                  winston.doInfo ('about to delete user', {email : user.email});
+                  deleteUserUtils.performUserDelete( user.email, true, function (err) {
                     if (err) {
-                      cb (winston.makeError ('could not delete from mixpanel', {err : err}));
-                    } else {
-                      cb ();
+                      cb(winston.makeError ('could not perform user delete', {err : err});
+                      return;
                     }
+
+                    //deregister from mp
+                    mixpanel.people.delete_user (user._id, function (err) {
+                      if (err) {
+                        cb (winston.makeError ('could not delete from mixpanel', {err : err}));
+                      } else {
+                        cb ();
+                      }
+                    });
                   });
-              }, function (err) {
-                callback (err);
-              });
+                },
+                function (err) {
+                  callback (err);
+                });
             }
           });
         }
