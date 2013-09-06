@@ -47,7 +47,7 @@ appInitUtils.initApp( 'deleteInvalidTokenUsers', initActions, conf, function() {
               async.eachSeries (usersToDelete, 
                 function (user, cb) {
                   
-                  if (user.lastLogin || user.billingPlan) {
+                  if (user.lastLogin || user.billingPlan !== 'free') {
                     cb();
                     winston.doInfo ('not deleting user', {email : user.email});
                     return;
