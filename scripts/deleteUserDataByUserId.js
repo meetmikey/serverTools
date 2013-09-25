@@ -9,8 +9,8 @@ var conf = require(serverCommon + '/conf')
 
 conf.turnDebugModeOn()
 
-if ((! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
-  winston.doWarn('Missing params: usage: node deleteUser.js <email> <also delete user object (true/false)>');
+if ((! process ) || ( ! process.argv ) || ( process.argv.length < 2 ) ) {
+  winston.doWarn('Missing params: usage: node deletUserDataByUserId.js <userId>');
   process.exit(1);
 }
 
@@ -19,29 +19,19 @@ var initActions = [
   , appInitUtils.CONNECT_MONGO
 ];
 
-appInitUtils.initApp( 'deletUser', initActions, conf, function() {
+appInitUtils.initApp( 'deletUserDataByUserId', initActions, conf, function() {
 
-  var deleteUser = {
+  var deletUserDataByUserId = {
     
     run: function( callback ) {
 
-      var userEmail = process.argv[2];
-      var shouldDeleteUserObject = false;
-      if ( ( process.argv.length >= 4 ) && ( process.argv[3] == 'true' ) ) {
-        shouldDeleteUserObject = true;
-      }
+      var userId = process.argv[2];
 
       prompt.start();
-      var message = '\nThis will delete EVERYTHING about user ' + userEmail;
-      if ( shouldDeleteUserObject ) {
-        message += ', including the user itself';
-      } else {
-        message += ', except the user itself';
-      }
-      message += '.  Are you SURE?';
+      var message = '\nThis will delete all the user data for userId ' + userId + '.  Are you SURE?';
       winston.consoleLog( message );
 
-      var deletePrompt = 'delete this user? (y/n)'
+      var deletePrompt = 'delete this user data? (y/n)'
       prompt.get([deletePrompt], function (err, result) {
         if ( err ) {
           callback( winston.makeError('prompt error', {promptError: err}) );
@@ -51,8 +41,8 @@ appInitUtils.initApp( 'deletUser', initActions, conf, function() {
           callback();
 
         } else {
-          winston.doInfo('running...', {userEmail: userEmail, shouldDeleteUserObject: shouldDeleteUserObject});
-          deleteUserUtils.performUserDelete( userEmail, shouldDeleteUserObject, callback );
+          winston.doInfo('running...', {userId: userId});
+          deleteUserUtils.performUserDataDeleteByUserId( userId, callback );
         }
       });
     }
@@ -68,5 +58,5 @@ appInitUtils.initApp( 'deletUser', initActions, conf, function() {
   }
 
   //Do it.
-  deleteUser.run( deleteUser.finish );
+  deletUserDataByUserId.run( deletUserDataByUserId.finish );
 });
