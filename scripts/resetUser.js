@@ -27,7 +27,7 @@ appInitUtils.initApp( 'resetUser', initActions, conf, function() {
       var userEmail = process.argv[2];
 
       prompt.start();
-      var message = '\nThis will reset ALL data for this user.  Are you SURE?';
+      var message = '\nThis will reset ALL data for user ' + userEmail + '.  Are you SURE?';
       winston.consoleLog( message );
 
       var resetPrompt = 'reset this user? (y/n)'
