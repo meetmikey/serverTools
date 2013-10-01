@@ -8,6 +8,8 @@ var conf = require(serverCommon + '/conf')
   , mongoose = require(serverCommon + '/lib/mongooseConnect').mongoose
   , prompt = require('prompt')
 
+conf.turnDebugModeOn();
+
 if ( ( ! process ) || ( ! process.argv ) || ( process.argv.length < 3 ) ) {
   winston.doWarn('Missing params: usage: node resetUser.js <email>');
   process.exit(1);
