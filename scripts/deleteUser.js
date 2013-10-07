@@ -5,6 +5,7 @@ var conf = require(serverCommon + '/conf')
   , appInitUtils = require(serverCommon + '/lib/appInitUtils')
   , winston = require(serverCommon + '/lib/winstonWrapper').winston
   , mongoose = require(serverCommon + '/lib/mongooseConnect').mongoose
+  , esConnect = require(serverCommon + '/lib/esConnect')
   , prompt = require('prompt')
 
 conf.turnDebugModeOn();
@@ -64,6 +65,7 @@ appInitUtils.initApp( 'deletUser', initActions, conf, function() {
         winston.doInfo('All done!');
       }
       mongoose.disconnect();
+      esConnect.stopPollingNodesAndHealth();
     }
   }
 
