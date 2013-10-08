@@ -6,6 +6,7 @@ var conf = require(serverCommon + '/conf')
   , appInitUtils = require(serverCommon + '/lib/appInitUtils')
   , winston = require(serverCommon + '/lib/winstonWrapper').winston
   , mongoose = require(serverCommon + '/lib/mongooseConnect').mongoose
+  , esConnect = require(serverCommon + '/lib/esConnect')
   , prompt = require('prompt')
 
 conf.turnDebugModeOn();
@@ -59,6 +60,7 @@ appInitUtils.initApp( 'resetUser', initActions, conf, function() {
         winston.handleError( err );
       }
       mongoose.disconnect();
+      esConnect.stopPollingNodesAndHealth();
     }
   }
 
