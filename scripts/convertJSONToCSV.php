@@ -74,6 +74,9 @@ foreach ($json as $fields) {
       if ( is_array( $value ) ) {
         $value = implode("|", $value);
       }
+      if ( $header == "_id" ) {
+        $value = $value->$oid;
+      }
       $str .= $value;
     }
   }
